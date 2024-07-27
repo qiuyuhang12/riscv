@@ -8,6 +8,7 @@
 #include <iostream>
 #include "register.hpp"
 #include "memory.hpp"
+#include "decode.hpp"
 
 enum type {
     Type,

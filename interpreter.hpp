@@ -9,6 +9,7 @@
 #include "decode.hpp"
 #include "register.hpp"
 #include <cassert>
+#include "decode.hpp"
 
 int sext(int imm, int len) {
     if (len==32){

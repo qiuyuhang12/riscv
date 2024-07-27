@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include "decode.hpp"
 
 using namespace std;
 //int memory[1 << 13] = {0};

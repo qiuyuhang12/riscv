@@ -4,5 +4,7 @@
 
 #ifndef MYPROJECT_REGISTER_HPP
 #define MYPROJECT_REGISTER_HPP
+#include "decode.hpp"
+
 int reg[32]={0};
 #endif //MYPROJECT_REGISTER_HPP
