@@ -72,7 +72,7 @@ void cinCode() {
 //            break;
 //        }
         if (line[0] == '@') {
-            cout<<0<<endl;
+//            cout<<0<<endl;
             pointer = stoi(line.substr(1), nullptr, 16); // Assuming the address is in hex
             continue;
         }
