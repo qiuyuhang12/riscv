@@ -10,7 +10,7 @@ set(SOURCES
         register.hpp
         decode.hpp
         reorder_buffer.hpp
-        cmake-build-debug/reserve_station.hpp
+        reserve_station.hpp
         common_data_bus.hpp
         interpreter.hpp
         lfc.hpp
