@@ -13,7 +13,7 @@ set(SOURCES
         reserve_station.hpp
         common_data_bus.hpp
         interpreter.hpp
-        lfc.hpp
+#        lfc.hpp
         # 其他源文件
 )
 
