@@ -63,5 +63,27 @@ void loadCode() {
         }
     }
 }
+void cinCode() {
+    string line;
+    int pointer = 0;
+    int tm= time(0);
+    while (getline(cin, line)) {
+//        if (tm< time(0)-3){
+//            break;
+//        }
+        if (line[0] == '@') {
+            cout<<0<<endl;
+            pointer = stoi(line.substr(1), nullptr, 16); // Assuming the address is in hex
+            continue;
+        }
+        istringstream iss(line);
+        unsigned int byteValue;
+        while (iss >> hex >> byteValue) {
+            memory[pointer] = byteValue;
+            pointer++;
+        }
+    }
+}
+
 
 #endif //MYPROJECT_MEMORY_HPP

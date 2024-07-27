@@ -4,9 +4,11 @@
 #include "register.hpp"
 
 int main() {
-    loadCode();
+//    loadCode();
+    cinCode();
     int clock = 0;
     while (pc < 1 << 20) {
+
 //    while (pc<1<<20&&clock<1000){
         ++clock;
         assert(pc % 4 == 0);
