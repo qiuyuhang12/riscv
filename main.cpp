@@ -4,8 +4,8 @@
 #include "register.hpp"
 
 int main() {
-//    loadCode();
-    cinCode();
+    loadCode();
+//    cinCode();
     int clock = 0;
     while (pc < 1 << 20) {
 
@@ -15,7 +15,7 @@ int main() {
         assert(get8() == 0x0ff00513);
         step();
 //        if (clock%1000==0)
-        cout << clock << "  " << hex << pc << dec << endl;
+//        cout << clock << "  " << hex << pc << dec << endl;
         instruction ins = decode(iR);
         interpreter(ins);
         if (ins.tp == B_TYPE || ins.op == jal || ins.op == jalr)continue;

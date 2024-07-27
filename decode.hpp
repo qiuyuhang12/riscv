@@ -70,6 +70,7 @@ struct instruction {
 instruction decode(int iR) {
     if (iR == 0x0ff00513) {
         cout << (reg[10] & 0xff);
+        exit(0);
         exit(reg[10]);
     }
     instruction ins;
