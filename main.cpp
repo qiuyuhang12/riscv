@@ -4,8 +4,8 @@
 #include "register.hpp"
 
 int main() {
-    loadCode();
-//    cinCode();
+//    loadCode();
+    cinCode();
     int clock = 0;
     while (pc < 1 << 20) {
 
