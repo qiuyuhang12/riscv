@@ -5,86 +5,52 @@
 #ifndef MYPROJECT_MEMORY_HPP
 #define MYPROJECT_MEMORY_HPP
 
+#include "utility.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "decode.hpp"
 
 using namespace std;
+
+class Memory {
 //int memory[1 << 13] = {0};
-int memory[1 << 20] = {0};
-int pc = 0;
-int iR;
-const string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/tak.data";
+public:
+    int memory[MemoryCapacity] = {0};
+//    int iR = -1;
+    const string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/tak.data";
 
-int get8() {
-    int tmp = 0;
-    for (int i = 0; i < 4; i++) {
-        tmp += memory[8 + i] << (i * 8);
-    }
-    return tmp;
-}
+    void loadCode();
 
-void step() {
-    iR = 0;
-    for (int i = 0; i < 4; i++) {
-        iR += memory[pc + i] << (i * 8);
-    }
-}
+    void cinCode();
 
-void addPC() {
-    pc += 4;
-    if (pc >= 1 << 20) {
-        exit(0);
-    }
+    int workCount = 0;
+    bool working = false;
+
+    int workCountNext = 0;
+    bool workingNext = false;
+
+    void startWork();
+
+public:
+    Memory();
+
+    void flush();
+
+    void step();
+
+    explicit Memory(const string &_file);
+
+    int get8();
+
+    int getiR(int pc);
+
+    void store(int addr, int value, int length);
+
+    int loadU(int addr, int length);
+
+    int load(int addr, int length);
 };
-
-void loadCode() {
-    ifstream file(filePath, ios::in);
-    if (!file) {
-        cerr << "Unable to open file: " << filePath << endl;
-        return;
-    }
-    // 读取文件内容到字符串
-    stringstream buffer;
-    buffer << file.rdbuf();
-    string line;
-    int pointer = 0;
-    while (getline(buffer, line)) {
-        if (line[0] == '@') {
-            pointer = stoi(line.substr(1), nullptr, 16); // Assuming the address is in hex
-            continue;
-        }
-        istringstream iss(line);
-        unsigned int byteValue;
-        while (iss >> hex >> byteValue) {
-            memory[pointer] = byteValue;
-            pointer++;
-        }
-    }
-}
-void cinCode() {
-    string line;
-    int pointer = 0;
-    int tm= time(0);
-    while (getline(cin, line)) {
-//        if (tm< time(0)-3){
-//            break;
-//        }
-        if (line[0] == '@') {
-//            cout<<0<<endl;
-            pointer = stoi(line.substr(1), nullptr, 16); // Assuming the address is in hex
-            continue;
-        }
-        istringstream iss(line);
-        unsigned int byteValue;
-        while (iss >> hex >> byteValue) {
-            memory[pointer] = byteValue;
-            pointer++;
-        }
-    }
-}
 
 
 #endif //MYPROJECT_MEMORY_HPP

@@ -1,33 +1,14 @@
-#include "utility.hpp"
-#include "decode.hpp"
-#include "memory.hpp"
+int clo=0;
 #include "interpreter.hpp"
-#include "register.hpp"
-#include "decode.hpp"
+Interpreter interpreter;
 
+
+#include "simulator.hpp"
+#include <cassert>
 int main() {
-#ifdef debug
-    loadCode();
-#endif
-#ifndef debug
-    cinCode();
-#endif
+    Simulator simulator;
+    simulator.work();
+    return 0;
 
-    int clock = 0;
-    while (pc < 1 << 20) {
-//    while (pc<1<<20&&clock<1000){
-#ifdef debug
-        ++clock;
-        assert(pc % 4 == 0);
-        assert(get8() == 0x0ff00513);
-//        if (clock%1000==0)
-        cout << clock << "  " << hex << pc << dec << endl;
-#endif
-        step();
-        instruction ins = decode(iR);
-        interpreter(ins);
-        if (ins.tp == B_TYPE || ins.op == jal || ins.op == jalr)continue;
-        addPC();
-    }
     return 0;
 }

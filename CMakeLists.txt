@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.30)
 
 # 设置项目名称和版本
-project(code VERSION 1.0)
+project(code)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,undefined")
 # 添加源文件
@@ -15,6 +15,21 @@ set(SOURCES
         common_data_bus.hpp
         interpreter.hpp
         utility.hpp
+        predictor.hpp
+        simulator.hpp
+        algorithm_logic_unit.hpp
+        load_store_buffer.hpp
+        algorithm_logic_unit.cpp
+        common_data_bus.cpp
+        decode.cpp
+        load_store_buffer.cpp
+        memory.cpp
+        predictor.cpp
+        register.cpp
+        reorder_buffer.cpp
+        reserve_station.cpp
+        simulator.cpp
+        utility.cpp
         #        lfc.hpp
         # 其他源文件
 )

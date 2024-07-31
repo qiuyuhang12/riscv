@@ -4,7 +4,31 @@
 
 #ifndef MYPROJECT_REGISTER_HPP
 #define MYPROJECT_REGISTER_HPP
-#include "decode.hpp"
 
-int reg[32]={0};
+#include "utility.hpp"
+
+class Reg {
+public:
+public:
+    struct unit {
+        int value = 0;
+        bool busy = false;
+        int entry = -1;
+
+        void init() ;
+    };
+
+    unit reg[32];
+    unit regNext[32];
+    int &pcReg;
+    int &nextPCReg;
+
+    void flush() ;
+
+//    int reg[32] = {0};
+//    bool isBusy[32] = {false};
+//    int entry[32] = {0};
+    Reg(int &_pcReg, int &_nextPCReg) ;
+};
+
 #endif //MYPROJECT_REGISTER_HPP
