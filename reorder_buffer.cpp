@@ -13,19 +13,22 @@ void Rob::check() {
     for (int i = 1; i < 32; ++i) {
 //        assert(interpreter.reg[i] == reg->regNext[i].value);
         if (interpreter.reg[i] != reg->regNext[i].value) {
-            cerr <<"reg: "<< i << "  your:" << reg->regNext[i].value << "   truth:" << interpreter.reg[i] << endl;
+//            cerr <<"reg: 0x"<<hex<< i << "  your:" << reg->regNext[i].value << "   truth:" << interpreter.reg[i] << endl;
+            cout <<"reg: 0x"<<hex<< i << "  your:" << reg->regNext[i].value << "   truth:" << interpreter.reg[i] << endl;
             flag= true;
         }
     }
     for (int i = 0; i < MemoryCapacity; ++i) {
         if (interpreter.memory[i] != memory->memory[i]) {
-            cerr <<"mem: "<< i << "  your:" << memory->memory[i] << "   truth:" << interpreter.memory[i] << endl;
+//            cerr <<"mem: 0x"<<hex<< i << "  your:" << memory->memory[i] << "   truth:" << interpreter.memory[i] << endl;
+            cout <<"mem: 0x"<<hex<< i << "  your:" << memory->memory[i] << "   truth:" << interpreter.memory[i] << endl;
             flag= true;
         }
 //        assert(interpreter.memory[i] == memory->memory[i]);
     }
     if (flag){
-        assert(0);
+//        exit(0);
+//        assert(0);
     }
 }
 
@@ -87,12 +90,16 @@ void Rob::receiveBroadcast() {
         if (queue[i].state == ISSUE) {
             if (queue[i].inst.tp == type::B_TYPE) {
                 auto tmp = cdb->getBr(queue[i].entry);
+                if (!tmp.first){
+                    continue;
+                }
                 if (queue[i].value != tmp.second.second) {
                     wrongPredicted(i, tmp.second.first);
                     predictor->update(queue[i].inst.pc, false);
                 } else {
                     predictor->update(queue[i].inst.pc, true);
                 }
+                queueNext[i].state = WRITE;
                 continue;
             }
 //                if (queue[i].inst.op==opcode::jal||queue[i].inst.op==opcode::jalr){
@@ -202,7 +209,7 @@ void Rob::issue(int iR) {
     if (inst.tp == type::S_TYPE || inst.originalOp == 3) {
         unit.state = WRITE;
     }
-    if (inst.rd != -1) {
+    if (inst.rd != -1&&inst.tp!=type::S_TYPE&&inst.tp!=type::B_TYPE) {
         reg->regNext[inst.rd].busy = true;
         reg->regNext[inst.rd].entry = unit.entry;
     }

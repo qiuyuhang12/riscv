@@ -90,7 +90,7 @@ std::pair<int, int> Cdb::get(int entry, bool memAddr) {
     return std::make_pair(false, 0);
 }
 
-std::pair<int, std::pair<int, int>> Cdb::getBr(int entry) {
+std::pair<int, std::pair<int, int>> Cdb::getBr(int entry) {//<找到，《pc，rsl》>
     for (int i = 0; i < capacity; i++) {
         if (br[i].entry == entry) {
             brNext[i].state = USED;

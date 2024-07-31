@@ -33,6 +33,11 @@ void Simulator::flush() {
 #ifdef detail
     std::cout << std::hex << "pc: " << pc << "    pcNext: " << pcNext << std::endl;
 #endif
+#ifdef regshow
+//    if (clo==0x119){
+        reg.print(0x15,0x16);
+//    }
+#endif
     pc = pcNext;
     iR = 0;
     reg.flush();
@@ -41,6 +46,7 @@ void Simulator::flush() {
     memory.flush();
     rs.flush();
     cdb.flush();
+
 }
 
 //Simulator::Simulator() : reg(pc, pcNext), memory(filePath) {
@@ -56,13 +62,20 @@ void Simulator::work() {
     while (true) {
         cout << "-----------------------------------------" << cccclock
              << "-----------------------------------------" << endl;
-//        if (clo > 0x90) {
+//        if (clo > 0x198) {
 //            break;
 //        }
 //        cout<<clock<<endl;
 
         if (cccclock & 1) {
             flush();
+#ifdef debug
+            if (rob.queue.isEmpty()){
+                for (int i = 0; i < 32; ++i) {
+                    assert(!reg.reg[i].busy);
+                }
+            }
+#endif
         } else {
 //            if (clock%1000==0)
 
@@ -77,8 +90,10 @@ void Simulator::work() {
                 auto inst = decode(iR);
                 inst.pc=pc;
                 rob.issue(iR);
+//                reg.print(0x15,0x16);
                 if (inst.tp != type::U_TYPE && inst.tp != type::J_TYPE&&inst.op!=opcode::end) {
                     rs.issue(rob.getNextRearIndex(), inst, pc);
+//                    reg.print(0x15,0x16);
                 }
                 // load & store
                 if ((inst.tp == type::S_TYPE || inst.originalOp == 3)&&inst.op!=opcode::end) {

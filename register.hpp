@@ -29,6 +29,12 @@ public:
 //    bool isBusy[32] = {false};
 //    int entry[32] = {0};
     Reg(int &_pcReg, int &_nextPCReg) ;
+    void print(int m=0,int n=32) {
+        for (int i = m; i < n; i++) {
+            std::cout << "reg[" << i << "]:     \t  " << reg[i].value << "\t  busy: " << reg[i].busy << "\t  entry: " << reg[i].entry << std::endl;
+            std::cout << "regNext[" << i << "]: \t  " << regNext[i].value << "\t  busy: " << regNext[i].busy << "\t  entry: " << regNext[i].entry << std::endl;
+        }
+    }
 };
 
 #endif //MYPROJECT_REGISTER_HPP

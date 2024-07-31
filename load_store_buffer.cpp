@@ -45,6 +45,7 @@ void Lsb::execute() {
 //    lsb.front().print();
 #endif
     assert(!lsb.isEmpty());
+    int loadValue = -1;
     switch (lsb.front().op) {
         case sb:
             memory->store(lsb.front().mem, lsb.front().reg, 1);
@@ -56,25 +57,37 @@ void Lsb::execute() {
             memory->store(lsb.front().mem, lsb.front().reg, 4);
             break;
         case lb:
-            lsbNext.front().value = memory->load(lsb.front().mem, 1);
+            loadValue = memory->load(lsb.front().mem, 1);
+//            lsbNext.front().value = memory->load(lsb.front().mem, 1);
 //                cdb->commit(memory->load(lsb.front().mem, 4), lsb.front().dest);
             break;
         case lh:
-            lsbNext.front().value = memory->load(lsb.front().mem, 2);
+            loadValue = memory->load(lsb.front().mem, 2);
+//            lsbNext.front().value = memory->load(lsb.front().mem, 2);
             break;
         case lw:
-            lsbNext.front().value = memory->load(lsb.front().mem, 4);
+            loadValue = memory->load(lsb.front().mem, 4);
+//            lsbNext.front().value = memory->load(lsb.front().mem, 4);
             break;
         case lbu:
-            lsbNext.front().value = memory->loadU(lsb.front().mem, 1);
+            loadValue = memory->loadU(lsb.front().mem, 1);
+//            lsbNext.front().value = memory->loadU(lsb.front().mem, 1);
             break;
         case lhu:
-            lsbNext.front().value = memory->loadU(lsb.front().mem, 2);
+            loadValue = memory->loadU(lsb.front().mem, 2);
+//            lsbNext.front().value = memory->loadU(lsb.front().mem, 2);
             break;
         default:
             assert(0);//undefined opcode
     }
-    lsbNext.dequeue();
+    if (lsb.front().inst.tp == I_TYPE) {
+//        cout<<"load: "<<loadValue<<endl;
+        lsbNext.front().value = loadValue;
+        cdb->write(loadValue, lsb.front().entry);
+        reg->regNext[lsb.front().dest].busy = false;
+        reg->regNext[lsb.front().dest].entry = -1;
+        reg->regNext[lsb.front().dest].value = loadValue;
+    }
 }
 
 
@@ -108,8 +121,11 @@ bool Lsb::isFull() {
 }
 
 void Lsb::issue(instruction inst, int entry) {
-#ifdef detail
+#ifdef debug
     cout << "Lsb issue pc: " << reg->pcReg << "  entry: " << entry << endl;
+#endif
+
+#ifdef detail
     inst.print();
 #endif
     unit tmp;
@@ -161,12 +177,12 @@ void Lsb::step() {
 //        if (lsb.front().time == 3) {
         if (!memory->working) {
             execute();
-            if (lsb.front().inst.tp == I_TYPE) {
-                cdb->write(lsb.front().value, lsb.front().entry);
-                reg->regNext[lsb.front().dest].busy = false;
-                reg->regNext[lsb.front().dest].entry = -1;
-                reg->regNext[lsb.front().dest].value = lsb.front().value;
-            }
+//            if (lsb.front().inst.tp == I_TYPE) {
+//                cdb->write(lsb.front().value, lsb.front().entry);
+//                reg->regNext[lsb.front().dest].busy = false;
+//                reg->regNext[lsb.front().dest].entry = -1;
+//                reg->regNext[lsb.front().dest].value = lsb.front().value;
+//            }
             lsbNext.dequeue();
         }
     }

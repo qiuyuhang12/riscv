@@ -6,6 +6,7 @@
 #define CODE_UTILITY_HPP
 #define debug
 //#define detail
+//#define regshow
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -24,7 +25,7 @@ const int MemoryCapacity = 1 << 19;
 const int PredictorCapacity = 1;
 const int RsCapacity = 1;
 const int capacity = 1;//queue
-const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/sample/sample.data";
+const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/superloop.data";
 
 template<typename T>
 class CircularQueue {
