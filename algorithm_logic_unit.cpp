@@ -6,7 +6,6 @@
 
 void Alu::bExe(){
     outBuffer=buffer;
-    outBuffer.pc += sext(buffer.imm, 13);
     switch (buffer.op) {
         case beq:
             if (buffer.rs1 == buffer.rs2) {
@@ -41,6 +40,11 @@ void Alu::bExe(){
         default:
             assert(0);
     }
+    if (outBuffer.rsl== true){
+        outBuffer.pc += sext(buffer.imm, 13);
+    } else {
+        outBuffer.pc += 4;
+    }
 }
 
 void Alu::bWrite() {
@@ -61,6 +65,7 @@ void Alu::step(){
     if (buffer.busy) {
         if (!buffer.done) {
             bExe();
+            buffer.done = true;
             outBuffer.done = true;
         } else {
             bWrite();

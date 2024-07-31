@@ -42,6 +42,7 @@ void Lsb::receiveBroadcast() {
 void Lsb::execute() {
 #ifdef debug
     cout << "lsb execute pc : " << lsb.front().inst.pc << endl;
+    cout<<"lsb mem : "<<lsb.front().mem<<endl;
 //    lsb.front().print();
 #endif
     assert(!lsb.isEmpty());

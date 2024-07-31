@@ -31,7 +31,7 @@ public:
     Interpreter() {
         pre();
     }
-    const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/superloop.data";
+    const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/gcd.data";
 
     int reg[32] = {0};
     int memory[1 << 20] = {0};
@@ -86,6 +86,7 @@ public:
     }
 
     void cinCode() {
+        return;
         string line;
         int pointer = 0;
         int tm = time(0);
@@ -415,6 +416,7 @@ public:
                                            (memory[reg[ins.rs1] + sext(ins.imm, 12) + 1] << 8), 16);
                         break;
                     case lw:
+//                        cout<<hex<<"clo: "<<clo<<"    "<<hex<<reg[ins.rs1] + sext(ins.imm, 12)<<endl;
                         reg[ins.rd] = memory[reg[ins.rs1] + sext(ins.imm, 12)] +
                                       (memory[reg[ins.rs1] + sext(ins.imm, 12) + 1] << 8) +
                                       (memory[reg[ins.rs1] + sext(ins.imm, 12) + 2] << 16) +

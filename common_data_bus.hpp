@@ -54,23 +54,33 @@ public:
     }ju, juNext;
     struct brUnit {
         State state = LEISURE;
-        int pc = 0;
+        int pc = -1;
         bool rsl = false;
-        int entry = 0;
-        brUnit &operator=(const brUnit &other) {
-            state = other.state;
-            pc = other.pc;
-            rsl = other.rsl;
-            entry = other.entry;
-            return *this;
+        int entry = -1;
+        void init() {
+            state = LEISURE;
+            pc = -1;
+            rsl = false;
+            entry = -1;
         }
+        void print() {
+            std::cout<<"state: "<<state<<" pc: "<<pc<<" rsl: "<<rsl<<" entry: "<<entry<<std::endl;
+        }
+//        brUnit &operator=(const brUnit &other) {
+//            state = other.state;
+//            pc = other.pc;
+//            rsl = other.rsl;
+//            entry = other.entry;
+//            return *this;
+//        }
+
     }br[capacity], brNext[capacity];
     unit cdb[capacity];
     unit cdbNext[capacity];
 
     //erase executed entry
     void erase(int entry, bool memAddr = false) ;
-
+    void eraseBr(int entry) ;
 public:
     void flush() ;
 //    bool storePanic = false;

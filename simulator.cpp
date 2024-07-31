@@ -34,9 +34,9 @@ void Simulator::flush() {
     std::cout << std::hex << "pc: " << pc << "    pcNext: " << pcNext << std::endl;
 #endif
 #ifdef regshow
-//    if (clo==0x119){
-        reg.print(0x15,0x16);
-//    }
+    //    if (clo==0x119){
+            reg.print(0x15,0x16);
+    //    }
 #endif
     pc = pcNext;
     iR = 0;
@@ -46,11 +46,17 @@ void Simulator::flush() {
     memory.flush();
     rs.flush();
     cdb.flush();
-
+//todo
+    cdb.pcFrozen = false;
 }
 
-//Simulator::Simulator() : reg(pc, pcNext), memory(filePath) {
-Simulator::Simulator() : reg(pc, pcNext), memory(filePath) {
+#ifndef debug
+
+Simulator::Simulator() : reg(pc, pcNext) {
+#endif
+#ifdef debug
+    Simulator::Simulator() : reg(pc, pcNext), memory(filePath) {
+#endif
     rob.init(&reg, &lsb, &cdb, &memory, &rs, &predictor);
     lsb.init(&reg, &rob, &memory, &cdb);
     rs.init(&reg, &lsb, &rob, &cdb, &alu);
@@ -60,9 +66,11 @@ Simulator::Simulator() : reg(pc, pcNext), memory(filePath) {
 void Simulator::work() {
     int cccclock = 0;
     while (true) {
+#ifdef debug
         cout << "-----------------------------------------" << cccclock
              << "-----------------------------------------" << endl;
-//        if (clo > 0x198) {
+#endif
+//        if (clo > 0x196) {
 //            break;
 //        }
 //        cout<<clock<<endl;
@@ -88,15 +96,15 @@ void Simulator::work() {
             if (!cdb.jalrPanic && !full) {
                 int iR = memory.getiR(pc);
                 auto inst = decode(iR);
-                inst.pc=pc;
+                inst.pc = pc;
                 rob.issue(iR);
 //                reg.print(0x15,0x16);
-                if (inst.tp != type::U_TYPE && inst.tp != type::J_TYPE&&inst.op!=opcode::end) {
+                if (inst.tp != type::U_TYPE && inst.tp != type::J_TYPE && inst.op != opcode::end) {
                     rs.issue(rob.getNextRearIndex(), inst, pc);
 //                    reg.print(0x15,0x16);
                 }
                 // load & store
-                if ((inst.tp == type::S_TYPE || inst.originalOp == 3)&&inst.op!=opcode::end) {
+                if ((inst.tp == type::S_TYPE || inst.originalOp == 3) && inst.op != opcode::end) {
                     lsb.issue(inst, rob.getNextRearIndex());
                 }
                 if (!cdb.pcFrozen) {

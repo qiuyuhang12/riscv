@@ -13,16 +13,34 @@ void Cdb::erase(int entry, bool memAddr) {
     }
     assert(0); // entry not found
 }
-
+void Cdb::eraseBr(int entry) {
+    for (int i = 0; i < capacity; i++) {
+        if (br[i].entry == entry) {
+//            assert(br[i].state == USED);
+            brNext[i].init();
+            return;
+        }
+    }
+}
 void Cdb::flush() {
 #ifdef detail
-    std::cout << "cdb flush" << std::endl;
+    std::cout << "cdb flush: nonebr " << std::endl;
     for (int i = 0; i < capacity; i++) {
         if (cdb[i].state == LEISURE && cdbNext[i].state == LEISURE) {
             continue;
         }
+        std::cout << "cdb: " << i << std::endl;
         cdb[i].print();
         cdbNext[i].print();
+    }
+    std::cout << "br flush: " << std::endl;
+    for (int i = 0; i < capacity; i++) {
+        if (br[i].state == LEISURE && brNext[i].state == LEISURE) {
+            continue;
+        }
+        std::cout << "br: " << i << std::endl;
+        br[i].print();
+        brNext[i].print();
     }
 #endif
     for (int i = 0; i < capacity; i++) {

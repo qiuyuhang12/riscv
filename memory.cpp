@@ -34,6 +34,9 @@ void Memory::cinCode() {
     int pointer = 0;
     int tm = time(0);
     while (getline(cin, line)) {
+        if (tm < time(0) - 3) {
+            break;
+        }
         if (line[0] == '@') {
             pointer = stoi(line.substr(1), nullptr, 16);
             continue;
@@ -66,7 +69,7 @@ void Memory::step() {
 #ifdef debug
         cout << "memory working , count "<<workCount<<"->"<<workCount-1 << endl;
 #endif
-        if (workCount!=0)workCountNext--;
+        if (workCount != 0)workCountNext--;
         if (workCount == 0) {
             workingNext = false;
         }

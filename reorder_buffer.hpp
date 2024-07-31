@@ -54,7 +54,7 @@ public:
 
     void receiveBroadcast();
 
-    void check();
+    void check(int pc);
 
 public:
     Rob();
