@@ -75,8 +75,8 @@ void Simulator::work() {
     while (true) {
 //#ifdef debug
 //        if (cccclock%1000==0)
-        cout << "-----------------------------------------" << cccclock
-             << "-----------------------------------------" <<boolalpha<<cdb.jalrPanic<< endl;
+//        cout << "-----------------------------------------" << cccclock
+//             << "-----------------------------------------" <<boolalpha<<cdb.jalrPanic<< endl;
 //        if (rob.queue[5].state!=Rob::UNKNOWN){
 //            cout<<"rob[5]:"<<rob.queue[5].state<<endl;
 //            rob.queue[5].print();
