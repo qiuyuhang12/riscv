@@ -4,7 +4,7 @@
 
 #ifndef CODE_UTILITY_HPP
 #define CODE_UTILITY_HPP
-#define debug
+//#define debug
 //#define detail
 //#define regshow
 #include <cassert>

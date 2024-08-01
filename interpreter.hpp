@@ -9,7 +9,7 @@
 #include <sstream>
 #include <string>
 #include <cassert>
-#define debug
+//#define debug
 extern const std::string filePath;
 extern int sext(int imm, int len);
 //const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/sample/sample.data";
