@@ -4,38 +4,50 @@
 
 #ifndef CODE_UTILITY_HPP
 #define CODE_UTILITY_HPP
-//#define debug
+#define debug
 //#define detail
 //#define regshow
 #include <cassert>
 #include <iostream>
 #include <string>
+
 //#include "interpreter.hpp"
 //using namespace std;
 extern int clo;
-//extern Interpreter interpreter;
-int sext(int imm, int len) ;
 
-//const int CdbCapacity = 1 << 5;
-//const int MemoryCapacity = 1 << 18;
-//const int PredictorCapacity = 1 << 5;
-//const int RsCapacity = 1 << 4;
-const int CdbCapacity = 1 << 2;
-const int MemoryCapacity = 1 << 19;
-const int PredictorCapacity = 1;
-const int RsCapacity = 1;
-const int capacity = 1;//queue
-const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/gcd.data";
+//extern Interpreter interpreter;
+int sext(int imm, int len);
+
+const int CdbCapacity = 1 << 5;
+const int MemoryCapacity = 1 << 18;
+const int PredictorCapacity = 1 << 5;
+const int RsCapacity = 1 << 4;
+const int capacity = 1 << 4;//queue
+
+//const int CdbCapacity = 1 << 2;
+//const int MemoryCapacity = 1 << 19;
+//const int PredictorCapacity = 1;
+//const int RsCapacity = 1;
+//const int capacity = 1;//queue
+const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/magic.data";
 
 template<typename T>
 class CircularQueue {
 private:
     T arr[capacity];
 
-    int currentSize=0;
+    int currentSize = 0;
 public:
-    int frontIndex=0;
-    int rearIndex=-1;
+    void clear(){
+        for (int i = 0; i < capacity; ++i) {
+            arr[i]=T();
+        }
+        frontIndex = 0;
+        rearIndex = -1;
+        currentSize = 0;
+    }
+    int frontIndex = 0;
+    int rearIndex = -1;
 
     CircularQueue();
 
@@ -61,6 +73,15 @@ public:
     CircularQueue &operator=(const CircularQueue &rhs);
 
     void cut(int index);
+
+    bool isInQueue(int index) {
+        //注意front>rear的循环情况
+        if (frontIndex > rearIndex) {
+            return index >= frontIndex || index <= rearIndex;
+        } else {
+            return index >= frontIndex && index <= rearIndex;
+        }
+    }
 };
 
 #endif //CODE_UTILITY_HPP

@@ -51,6 +51,12 @@ public:
             entry = other.entry;
             return *this;
         }
+        void init() {
+            state = LEISURE;
+            value = 0;
+            valuePC = 0;
+            entry = 0;
+        }
     }ju, juNext;
     struct brUnit {
         State state = LEISURE;
@@ -87,12 +93,26 @@ public:
     bool jalrPanic = false;
 //    bool stop = false;
     bool pcFrozen = false;
+    bool clearUp= false;
     void writeBr(int pc, bool rsl, int entry);
     void write(int value, int entry, bool memAddr = false) ;
-    std::pair<int, int> get(int entry, bool memAddr = false) ;
+    std::pair<int, int> get(int entry, bool memAddr = false,bool isJ = false) ;
     std::pair<int, std::pair<int,int > > getBr(int entry) ;
     void writeJal(int value, int entry, int valuePC) ;
     std::pair<int, int> getJal(int entry) ;
+    void clear() {
+        for (int i = 0; i < capacity; i++) {
+            cdbNext[i].init();
+            brNext[i].init();
+            cdb[i].init();
+            br[i].init();
+        }
+        juNext.init();
+        ju.init();
+        jalrPanic = false;
+        clearUp= false;
+        pcFrozen = false;
+    }
 };
 
 #endif //MYPROJECT_COMMON_DATA_BUS_HPP

@@ -113,6 +113,14 @@ public:
     void issue(int entry, instruction inst, int pc);
 
     void step();
+
+    void clear(){
+        for (int i = 0; i < capacity; ++i) {
+            rsNext[i].init();
+            rs[i].init();
+        }
+        alu->clear();
+    }
 };
 
 #endif //MYPROJECT_RESERVE_STATION_HPP

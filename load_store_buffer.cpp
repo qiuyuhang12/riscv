@@ -20,8 +20,11 @@ void Lsb::query(int index) {
 }
 
 void Lsb::receiveBroadcast() {
-//    for (int i = 0; i < capacity; i++) {
-    for (int i = lsb.frontIndex; i <= lsb.rearIndex; i++) {
+//    for (int i = lsb.frontIndex; i <= lsb.rearIndex; i++) {
+    for (int i = 0; i < capacity; i++) {
+        if (!lsb.isInQueue(i)) {
+            continue;
+        }
         if (lsb[i].regEntry != -1) {
             auto tmp = cdb->get(lsb[i].regEntry);
             if (tmp.first) {
@@ -41,7 +44,7 @@ void Lsb::receiveBroadcast() {
 
 void Lsb::execute() {
 #ifdef debug
-    cout << "lsb execute pc : " << lsb.front().inst.pc << endl;
+    cout << "lsb execute pc : " << lsb.front().inst.pc <<"  entry: "<<lsb.front().entry<< endl;
     cout<<"lsb mem : "<<lsb.front().mem<<endl;
 //    lsb.front().print();
 #endif
@@ -85,8 +88,10 @@ void Lsb::execute() {
 //        cout<<"load: "<<loadValue<<endl;
         lsbNext.front().value = loadValue;
         cdb->write(loadValue, lsb.front().entry);
-        reg->regNext[lsb.front().dest].busy = false;
-        reg->regNext[lsb.front().dest].entry = -1;
+        if (reg->regNext[lsb.front().dest].entry==lsb.front().entry){
+            reg->regNext[lsb.front().dest].busy = false;
+            reg->regNext[lsb.front().dest].entry = -1;
+        }
         reg->regNext[lsb.front().dest].value = loadValue;
     }
 }
@@ -141,7 +146,7 @@ void Lsb::issue(instruction inst, int entry) {
             tmp.dest = inst.rd;
             break;
         case S_TYPE:
-            if (reg->regNext[inst.rs1].busy) {
+            if (reg->regNext[inst.rs2].busy) {
                 tmp.regEntry = reg->regNext[inst.rs2].entry;
             } else {
                 tmp.reg = reg->regNext[inst.rs2].value;
@@ -156,10 +161,14 @@ void Lsb::issue(instruction inst, int entry) {
 }
 
 
-void Lsb::commit() {
+void Lsb::commit(int entry) {
+    if (entry!=lsb.front().entry){
+        cerr<<hex<<"entry: "<<entry<<"  lsb_entry: "<<lsb.front().entry<<"  lsb_pc: "<<lsb.front().inst.pc<<endl;
+        assert(0);
+    }
     if (!memory->working) {
 #ifdef debug
-        cout << "lsb commit pc : " << lsb.front().inst.pc << endl;
+        cout << "lsb commit pc : " << lsb.front().inst.pc<< " entry: " <<lsb.front().entry<< endl;
 //        lsb.front().print();
 #endif
         assert(lsb.front().memEntry == -1 && lsb.front().regEntry == -1);

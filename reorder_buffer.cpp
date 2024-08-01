@@ -8,6 +8,7 @@
 extern Interpreter interpreter;
 
 void Rob::check(int pc) {
+
     static int checkCount = 0;
     checkCount++;
     bool flag = false;
@@ -18,6 +19,12 @@ void Rob::check(int pc) {
 //        assert(0);
     }
     interpreter.work1step();
+//    for (int i = 0; i < CdbCapacity; ++i) {
+//        if (cdb->cdbNext[i].state != Cdb::LEISURE) {
+//            cerr << "cdb: " << i << " state: " << cdb->cdbNext[i].state << endl;
+//            flag = true;
+//        }
+//    }
     for (int i = 1; i < 32; ++i) {
 //        assert(interpreter.reg[i] == reg->regNext[i].value);
         if (interpreter.reg[i] != reg->regNext[i].value) {
@@ -44,14 +51,14 @@ void Rob::check(int pc) {
 
 void Rob::Unit::print() {
     cout << "entry:" << entry << " busy:" << busy << " state:" << state << " dest:" << dest << " value:" << value
-         << " pc:" << pc << endl;
+         << " pc:" << pc;
     inst.print();
 }
 
 void Rob::commit() {
     Unit tmp = queue.front();
 #ifdef debug
-    cout << "Rob commit pc:" << std::hex << tmp.pc << endl;
+    cout << "Rob commit pc:" << std::hex << tmp.pc << "  entry: " << tmp.entry << endl;
 #endif
     if (tmp.inst.op == opcode::end) {
         cout << (reg->reg[10].value & 0xff);
@@ -61,7 +68,7 @@ void Rob::commit() {
     if (tmp.inst.originalOp == 3 || tmp.inst.tp == type::S_TYPE) {//LOAD,STORE,不进入switch
         if (!memory->working && lsb->ready()) {
             queueNext.front().state = COMMIT;
-            lsb->commit();
+            lsb->commit(queue.front().entry);
         } else {
 #ifdef debug
             cout << "commit fail" << endl;
@@ -76,15 +83,26 @@ void Rob::commit() {
         case type::R_TYPE:
         case type::I_TYPE:
             reg->regNext[tmp.dest].value = tmp.value;
-            reg->regNext[tmp.dest].busy = false;
-            reg->regNext[tmp.dest].entry = -1;
+            if (reg->regNext[tmp.dest].entry == tmp.entry) {
+                reg->regNext[tmp.dest].busy = false;
+                reg->regNext[tmp.dest].entry = -1;
+            }
             queueNext.front().state = COMMIT;
-            if (tmp.inst.op != jal)cdb->erase(queue.frontIndex);
+            if (tmp.inst.op == jal || tmp.inst.op == jalr) {
+                //在 receive 时未删除
+                cdb->erase(queue.frontIndex, true);
+                cdb->erase(queue.frontIndex);
+            } else {
+                cdb->erase(queue.frontIndex);
+            }
             queueNext.dequeue();
             break;
         case type::B_TYPE:
             queueNext.front().state = COMMIT;
             cdb->eraseBr(queue.frontIndex);
+            if (!tmp.branch) {
+                wrongPredicted(queue.frontIndex, tmp.value);
+            }
             queueNext.dequeue();
             break;
         default:
@@ -96,28 +114,63 @@ void Rob::commit() {
 }
 
 void Rob::wrongPredicted(int entry, int pc) {
+#ifdef debug
+    cout << "rob wrongPredicted nextPc:" << std::hex << pc << "  entry: " << entry << endl;
+#endif
+    cdb->clearUp = true;
     cdb->pcFrozen = true;
-    queueNext.cut(entry);
+    reg->nextPCReg = pc;
+//    queueNext.clear();
+////    queueNext.cut(entry);
+//    lsb->clear();
+//    rs->clear();
+//    reg->clear();
+//    cdb->clear();
 }
 
 void Rob::receiveBroadcast() {
-    for (int i = queue.frontIndex; i <= queue.rearIndex; i++) {
+    //todo::front>rear!!!时候
+//    for (int i = queue.frontIndex; i <= queue.rearIndex; i++) {
+    for (int i = 0; i < capacity; i++) {
+        if (!queue.isInQueue(i)) {
+            continue;
+        }
         if (queue[i].state == ISSUE) {
-
+            if (queue[i].inst.op == opcode::jal || queue[i].inst.op == opcode::jalr) {
+                auto tmp = cdb->get(queue[i].entry, true, true);
+                if (!tmp.first) {
+                    continue;
+                }
+#ifdef debug
+                cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << "  entry: " << i << endl;
+#endif
+                if (queue[i].inst.op == opcode::jalr) {
+//                    cdb->stop= false;
+                    reg->nextPCReg = tmp.second;
+                    cdb->jalrPanic = false;
+                    queueNext[i].state = WRITE;
+                    continue;
+                }
+                queueNext[i].pc = tmp.second;
+                queueNext[i].state = WRITE;
+                continue;
+            }
             if (queue[i].inst.tp == type::B_TYPE) {
                 auto tmp = cdb->getBr(queue[i].entry);
                 if (!tmp.first) {
                     continue;
                 }
 #ifdef debug
-                cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << endl;
+                cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << "  entry: " << i << endl;
 #endif
 //                cout << "ppppppppppppppppppppppc: " << std::hex << reg->nextPCReg << endl;
                 if (queue[i].value != tmp.second.second) {
-                    reg->nextPCReg = tmp.second.first;
-                    wrongPredicted(i, tmp.second.first);
+                    queueNext[i].value = tmp.second.first;//从bool变成pc值
+                    queueNext[i].branch = false;
+//                    wrongPredicted(i, tmp.second.first);
                     predictor->update(queue[i].inst.pc, false);
                 } else {
+                    queueNext[i].branch = true;
                     predictor->update(queue[i].inst.pc, true);
                 }
                 queueNext[i].state = WRITE;
@@ -131,15 +184,9 @@ void Rob::receiveBroadcast() {
             auto tmp = cdb->get(queue[i].entry);
             if (tmp.first) {
 #ifdef debug
-                cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << endl;
+                cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << "  entry: " << i << endl;
 #endif
-                if (queue[i].inst.op == opcode::jalr) {
-//                    cdb->stop= false;
-                    reg->nextPCReg = tmp.second;
-                    cdb->jalrPanic = false;
-                    queueNext[i].state = WRITE;
-                    continue;
-                }
+
                 queueNext[i].value = tmp.second;
                 queueNext[i].state = WRITE;
             }
@@ -171,9 +218,10 @@ void Rob::flush() {
 #ifdef detail
     cout << "rob flush" << endl;
     for (int i = 0; i < capacity; ++i) {
-        if (queue[i]==queueNext[i]){
+        if (queue[i] == queueNext[i]) {
             continue;
         }
+        cout << "rob: " << i << endl;
         queue[i].print();
         queueNext[i].print();
     }
@@ -189,10 +237,13 @@ void Rob::step() {
     auto tmp = queue.front();
     if (tmp.state == TODELETECDB) {
 #ifdef debug
-        check(queue.front().pc);
+        cout << "rob TODELETECDB pc:" << std::hex << tmp.pc << "  entry: " << queue.frontIndex << endl;
 #endif
         queueNext.dequeue();
         if (tmp.inst.tp != S_TYPE)cdb->erase(queue.frontIndex);//只有S指令才不广播
+#ifdef debug
+        check(queue.front().pc);
+#endif
     }
     if (tmp.state == WRITE || tmp.inst.op == opcode::end) {
         commit();
@@ -219,12 +270,11 @@ void Rob::issue(int iR) {
         return;
     }
 #ifdef debug
-    cout << "Rob issue pc:" << std::hex << reg->pcReg << endl;
+    cout << "Rob issue pc:" << std::hex << reg->pcReg << "  entry: " << queue.getNextRearIndex() << endl;
 #endif
 #ifdef detail
-    cout << "Rob issue pc:" << std::hex << reg->pcReg << endl;
+    //    cout << "Rob issue pc:" << std::hex << reg->pcReg << endl;
     inst.print();
-    unit.pc = reg->pcReg;
 #endif
     unit.inst = inst;
     unit.busy = true;
@@ -259,6 +309,7 @@ void Rob::issue(int iR) {
     }
     if (inst.op == opcode::jalr || inst.op == opcode::jal) {
         unit.value = reg->pcReg + 4;
+        cdb->write(reg->pcReg + 4, unit.entry);
         reg->regNext[inst.rd].busy = true;
         reg->regNext[inst.rd].entry = unit.entry;
     }
@@ -268,6 +319,7 @@ void Rob::issue(int iR) {
     if (inst.op == opcode::jal) {
         cdb->pcFrozen = true;
         reg->nextPCReg += sext(inst.imm, 21);
+        cdb->write(reg->pcReg + sext(inst.imm, 21), unit.entry, true);
         unit.state = WRITE;
     }
     queueNext.enqueue(unit);

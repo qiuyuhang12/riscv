@@ -60,6 +60,7 @@ void Cdb::writeBr(int pc, bool rsl, int entry) {
     }
     for (int i = 0; i < capacity; i++) {
         if (br[i].state == LEISURE) {
+            br[i].state = ACTIVE;
             brNext[i].pc = pc;
             brNext[i].rsl = rsl;
             brNext[i].entry = entry;
@@ -84,6 +85,7 @@ void Cdb::write(int value, int entry, bool memAddr) {
     }
     for (int i = 0; i < capacity; i++) {
         if (cdb[i].state == LEISURE) {
+            cdb[i].state = ACTIVE;
             cdbNext[i].value = value;
             cdbNext[i].entry = entry;
             cdbNext[i].state = ACTIVE;
@@ -94,12 +96,12 @@ void Cdb::write(int value, int entry, bool memAddr) {
     assert(0); // cdb is full
 }
 
-std::pair<int, int> Cdb::get(int entry, bool memAddr) {
+std::pair<int, int> Cdb::get(int entry, bool memAddr,bool isJ) {
     for (int i = 0; i < capacity; i++) {
         if (cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
             cdbNext[i].state = USED;
             auto rsl = std::make_pair(true, cdb[i].value);
-            if (memAddr) {
+            if (memAddr&&!isJ){
                 erase(entry, true);
             }
             return rsl;

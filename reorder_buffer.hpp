@@ -40,6 +40,7 @@ public:
         int dest = -1;
         int value = 0;
         int pc = 0;//debug
+        bool branch= false;
         void print();
         bool operator==(const Unit &rhs) const{
             return entry == rhs.entry&&busy == rhs.busy&&inst == rhs.inst&&state == rhs.state&&dest == rhs.dest&&value == rhs.value&&pc == rhs.pc;
@@ -72,6 +73,19 @@ public:
     void issue(int iR);
 
     bool isFull();
+
+    void clear(){
+#ifdef debug
+        std::cout<<"rob clear--------------------------------------------------------------------------------------"<<std::endl;
+#endif
+        queueNext.clear();
+        queue.clear();
+//    queueNext.cut(entry);
+        lsb->clear();
+        rs->clear();
+        reg->clear();
+        cdb->clear();
+    }
 
 };
 

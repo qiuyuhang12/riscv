@@ -35,6 +35,14 @@ public:
             std::cout << "regNext[" << i << "]: \t  " << regNext[i].value << "\t  busy: " << regNext[i].busy << "\t  entry: " << regNext[i].entry << std::endl;
         }
     }
+    void clear() {
+        for (int i = 0; i < 32; i++) {
+            regNext[i].busy = false;
+            regNext[i].entry = -1;
+            reg[i].busy = false;
+            reg[i].entry = -1;
+        }
+    }
 };
 
 #endif //MYPROJECT_REGISTER_HPP

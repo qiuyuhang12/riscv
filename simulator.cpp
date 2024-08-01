@@ -35,17 +35,24 @@ void Simulator::flush() {
 #endif
 #ifdef regshow
     //    if (clo==0x119){
-            reg.print(0x15,0x16);
+            reg.print(0xf,0x10);
     //    }
 #endif
+
     pc = pcNext;
     iR = 0;
+    memory.flush();
+
+    if (cdb.clearUp== true){
+        rob.clear();
+        return;
+    }
     reg.flush();
     rob.flush();
     lsb.flush();
-    memory.flush();
     rs.flush();
     cdb.flush();
+    alu.flush();
 //todo
     cdb.pcFrozen = false;
 }
@@ -66,16 +73,22 @@ Simulator::Simulator() : reg(pc, pcNext) {
 void Simulator::work() {
     int cccclock = 0;
     while (true) {
-#ifdef debug
+//#ifdef debug
+//        if (cccclock%1000==0)
         cout << "-----------------------------------------" << cccclock
-             << "-----------------------------------------" << endl;
-#endif
-//        if (clo > 0x196) {
+             << "-----------------------------------------" <<boolalpha<<cdb.jalrPanic<< endl;
+//        if (rob.queue[5].state!=Rob::UNKNOWN){
+//            cout<<"rob[5]:"<<rob.queue[5].state<<endl;
+//            rob.queue[5].print();
+//        }
+//#endif
+//        if (clo > 0x318) {
 //            break;
 //        }
 //        cout<<clock<<endl;
 
         if (cccclock & 1) {
+//            cout<<"cdb[0]:"<<cdb.cdb[0].state<<"  "<<cdb.cdbNext[0].state<<endl;
             flush();
 #ifdef debug
             if (rob.queue.isEmpty()){
@@ -112,9 +125,14 @@ void Simulator::work() {
                 } else {
                     cdb.pcFrozen = false;
                 }
+//                reg.print(0xf, 0x10);
             }
             rob.step();
+//            reg.print(0xf, 0x10);
+
             rs.step();
+//            reg.print(0xf, 0x10);
+
             lsb.step();
             memory.step();
             alu.step();

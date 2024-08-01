@@ -89,13 +89,17 @@ public:
     void issue(instruction inst, int entry);
 
     //供rob调用,启动一个S指令
-    void commit();
+    void commit(int entry);
 
     //供simulator调用
     void step();
 
     bool ready();
 
+    void clear(){
+        lsbNext.clear();
+        lsb.clear();
+    }
 };
 
 #endif //CODE_LOAD_STORE_BUFFER_HPP

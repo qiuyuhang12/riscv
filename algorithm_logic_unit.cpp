@@ -4,56 +4,56 @@
 #include "algorithm_logic_unit.hpp"
 #include "common_data_bus.hpp"
 
-void Alu::bExe(){
-    outBuffer=buffer;
+void Alu::bExe() {
+    outBufferNext = buffer;
     switch (buffer.op) {
         case beq:
             if (buffer.rs1 == buffer.rs2) {
-                outBuffer.rsl = true;
-            } else outBuffer.rsl = false;
+                outBufferNext.rsl = true;
+            } else outBufferNext.rsl = false;
             break;
         case bne:
             if (buffer.rs1 != buffer.rs2) {
-                outBuffer.rsl = true;
-            } else outBuffer.rsl = false;
+                outBufferNext.rsl = true;
+            } else outBufferNext.rsl = false;
             break;
         case blt:
             if (buffer.rs1 < buffer.rs2) {
-                outBuffer.rsl = true;
-            } else outBuffer.rsl = false;
+                outBufferNext.rsl = true;
+            } else outBufferNext.rsl = false;
             break;
         case bge:
             if (buffer.rs1 >= buffer.rs2) {
-                outBuffer.rsl = true;
-            } else outBuffer.rsl = false;
+                outBufferNext.rsl = true;
+            } else outBufferNext.rsl = false;
             break;
         case bltu:
             if (static_cast<unsigned int>(buffer.rs1) < static_cast<unsigned int>(buffer.rs2)) {
-                outBuffer.rsl = true;
-            } else outBuffer.rsl = false;
+                outBufferNext.rsl = true;
+            } else outBufferNext.rsl = false;
             break;
         case bgeu:
             if (static_cast<unsigned int>(buffer.rs1) >= static_cast<unsigned int>(buffer.rs2)) {
-                outBuffer.rsl = true;
-            } else outBuffer.rsl = false;
+                outBufferNext.rsl = true;
+            } else outBufferNext.rsl = false;
             break;
         default:
             assert(0);
     }
-    if (outBuffer.rsl== true){
-        outBuffer.pc += sext(buffer.imm, 13);
+    if (outBufferNext.rsl == true) {
+        outBufferNext.pc += sext(buffer.imm, 13);
     } else {
-        outBuffer.pc += 4;
+        outBufferNext.pc += 4;
     }
 }
 
 void Alu::bWrite() {
     cdb->writeBr(outBuffer.pc, outBuffer.rsl, outBuffer.entry);
-    buffer.init();
-    outBuffer.init();
+    bufferNext.init();
+    outBufferNext.init();
 }
 
-Alu::Alu(){}
+Alu::Alu() {}
 
 Alu::Alu(Cdb *cdb) : cdb(cdb) {}
 
@@ -61,12 +61,12 @@ void Alu::init(Cdb *cdb) {
     this->cdb = cdb;
 }
 
-void Alu::step(){
+void Alu::step() {
     if (buffer.busy) {
         if (!buffer.done) {
             bExe();
-            buffer.done = true;
-            outBuffer.done = true;
+            bufferNext.done = true;
+            outBufferNext.done = true;
         } else {
             bWrite();
         }
@@ -74,19 +74,19 @@ void Alu::step(){
 }
 
 void Alu::inBuffer(int rs1, int rs2, int imm, opcode op, int entry, int pc) {
-    buffer.init();
-    buffer.busy = true;
-    buffer.rs1 = rs1;
-    buffer.rs2 = rs2;
-    buffer.imm = imm;
-    buffer.pc = pc;
-    buffer.op = op;
-    buffer.entry = entry;
+    bufferNext.init();
+    bufferNext.busy = true;
+    bufferNext.rs1 = rs1;
+    bufferNext.rs2 = rs2;
+    bufferNext.imm = imm;
+    bufferNext.pc = pc;
+    bufferNext.op = op;
+    bufferNext.entry = entry;
 }
 
 void Alu::alu(int vi, int vj, int imm, opcode op, int entry) {
     int res = 0;
-    bool memAddr= false;
+    bool memAddr = false;
     switch (op) {
 //U-type
         case auipc:
@@ -97,10 +97,11 @@ void Alu::alu(int vi, int vj, int imm, opcode op, int entry) {
         case sh:
         case sw:
             res = (vi + sext(imm, 12)) & ~1;
-            memAddr= true;
+            memAddr = true;
             break;
 //I-type(jalr)
         case jalr:
+            memAddr = true;
             res = (vi + sext(imm, 12)) & ~1;
             break;
 //I-type(load)
@@ -109,7 +110,7 @@ void Alu::alu(int vi, int vj, int imm, opcode op, int entry) {
         case lw:
         case lbu:
         case lhu:
-            memAddr= true;
+            memAddr = true;
             res = vi + sext(imm, 12);
             break;
 //I-type

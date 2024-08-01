@@ -46,7 +46,7 @@ public:
             pc = 0;
             entry = 0;
         }
-    } buffer,outBuffer;
+    } buffer,outBuffer,bufferNext,outBufferNext;
 
     void bExe() ;
 
@@ -61,6 +61,18 @@ public:
     void inBuffer(int rs1, int rs2, int imm, opcode op, int entry, int pc);
 
     void alu(int vi, int vj, int imm, opcode op, int entry);
+
+    void clear(){
+        buffer.init();
+        outBuffer.init();
+        bufferNext.init();
+        outBufferNext.init();
+    }
+
+    void flush(){
+        buffer = bufferNext;
+        outBuffer = outBufferNext;
+    }
 };
 
 #endif //CODE_ALGORITHM_LOGIC_UNIT_HPP

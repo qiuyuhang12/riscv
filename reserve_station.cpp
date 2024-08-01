@@ -5,6 +5,7 @@
 #include "common_data_bus.hpp"
 #include "register.hpp"
 #include "load_store_buffer.hpp"
+
 void Rs::query(int index) {
     if (rs[index].entry1 != -1) {
         auto tmp = cdb->get(rs[index].entry1);
@@ -24,7 +25,7 @@ void Rs::query(int index) {
 
 void Rs::execute(int index) {
 #ifdef debug
-    cout<<"Rs execute pc:"<<std::hex<<rs[index].pc<<endl;
+    cout << "Rs execute pc:" << std::hex << rs[index].pc << "  entry: " << rs[index].dest << endl;
 #endif
     if (rs[index].isB) {
         alu->inBuffer(rs[index].rs1, rs[index].rs2, rs[index].imm, rs[index].op, rs[index].dest, rs[index].pc);
@@ -86,7 +87,7 @@ bool Rs::isFull() {
 
 void Rs::issue(int entry, instruction inst, int pc) {
 #ifdef debug
-    cout<<"Rs issue pc:"<<std::hex<<pc<<endl;
+    cout << "Rs issue pc:" << std::hex << pc << "  entry: " << entry << endl;
 #endif
 #ifdef detail
     cout << "RS issue pc: " << reg->pcReg <<"  entry: "<<entry<< endl;
@@ -107,7 +108,13 @@ void Rs::issue(int entry, instruction inst, int pc) {
 //                    return;
 //                }
             if (reg->reg[inst.rs1].busy) {
-                rsNext[i].entry1 = reg->reg[inst.rs1].entry;
+                auto tmp = cdb->get(reg->reg[inst.rs1].entry);
+                if (tmp.first) {
+                    rsNext[i].rs1 = tmp.second;
+                    rsNext[i].entry1 = -1;
+                } else {
+                    rsNext[i].entry1 = reg->reg[inst.rs1].entry;
+                }
             } else {
                 rsNext[i].rs1 = reg->reg[inst.rs1].value;
             }
@@ -122,14 +129,26 @@ void Rs::issue(int entry, instruction inst, int pc) {
                     break;
                 case R_TYPE:
                     if (reg->reg[inst.rs2].busy) {
-                        rsNext[i].entry2 = reg->reg[inst.rs2].entry;
+                        auto tmp = cdb->get(reg->reg[inst.rs2].entry);
+                        if (tmp.first) {
+                            rsNext[i].rs2 = tmp.second;
+                            rsNext[i].entry2 = -1;
+                        } else {
+                            rsNext[i].entry2 = reg->reg[inst.rs2].entry;
+                        }
                     } else {
                         rsNext[i].rs2 = reg->reg[inst.rs2].value;
                     }
                     break;
                 case S_TYPE:
                     if (reg->reg[inst.rs2].busy) {
-                        rsNext[i].entry2 = reg->reg[inst.rs2].entry;
+                        auto tmp = cdb->get(reg->reg[inst.rs2].entry);
+                        if (tmp.first) {
+                            rsNext[i].rs2 = tmp.second;
+                            rsNext[i].entry2 = -1;
+                        } else {
+                            rsNext[i].entry2 = reg->reg[inst.rs2].entry;
+                        }
                     } else {
                         rsNext[i].rs2 = reg->reg[inst.rs2].value;
                     }
@@ -137,7 +156,13 @@ void Rs::issue(int entry, instruction inst, int pc) {
                     break;
                 case B_TYPE:
                     if (reg->reg[inst.rs2].busy) {
-                        rsNext[i].entry2 = reg->reg[inst.rs2].entry;
+                        auto tmp = cdb->get(reg->reg[inst.rs2].entry);
+                        if (tmp.first) {
+                            rsNext[i].rs2 = tmp.second;
+                            rsNext[i].entry2 = -1;
+                        } else {
+                            rsNext[i].entry2 = reg->reg[inst.rs2].entry;
+                        }
                     } else {
                         rsNext[i].rs2 = reg->reg[inst.rs2].value;
                     }

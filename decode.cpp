@@ -73,6 +73,9 @@ void instruction::print() {
                 case srai:
                     std::cout << "srai x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
                     break;
+                case jalr:
+                    std::cout << "jalr x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    break;
                 default:
                     std::cout << "undefined" << std::endl;
                     break;
@@ -160,7 +163,7 @@ void instruction::print() {
             std::cout << "end" << std::endl;
             break;
         default:
-            std::cout << "undefined" << std::endl;
+            std::cout << "undefineddd" << std::endl;
             break;
     }
 }
