@@ -7,6 +7,7 @@
 //#define debug
 //#define detail
 //#define regshow
+//#define single
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -18,18 +19,21 @@ extern int clo;
 //extern Interpreter interpreter;
 int sext(int imm, int len);
 
+#ifndef single
 const int CdbCapacity = 1 << 5;
 const int MemoryCapacity = 1 << 18;
 const int PredictorCapacity = 1 << 5;
 const int RsCapacity = 1 << 4;
 const int capacity = 1 << 4;//queue
-
-//const int CdbCapacity = 1 << 2;
-//const int MemoryCapacity = 1 << 19;
-//const int PredictorCapacity = 1;
-//const int RsCapacity = 1;
-//const int capacity = 1;//queue
-const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/magic.data";
+#endif
+#ifdef single
+const int CdbCapacity = 1 << 2;
+const int MemoryCapacity = 1 << 19;
+const int PredictorCapacity = 1;
+const int RsCapacity = 1;
+const int capacity = 1;//queue
+#endif
+const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/qsort.data";
 
 template<typename T>
 class CircularQueue {
@@ -38,14 +42,15 @@ private:
 
     int currentSize = 0;
 public:
-    void clear(){
+    void clear() {
         for (int i = 0; i < capacity; ++i) {
-            arr[i]=T();
+            arr[i] = T();
         }
         frontIndex = 0;
         rearIndex = -1;
         currentSize = 0;
     }
+
     int frontIndex = 0;
     int rearIndex = -1;
 

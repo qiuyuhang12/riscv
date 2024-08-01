@@ -70,9 +70,11 @@ struct instruction {
     int imm = 0;
     int pc = 0;
     int iR = 0;
+    int clock = 0;
 
     void print();
-    bool operator==(const instruction &rhs) const{
+
+    bool operator==(const instruction &rhs) const {
         return tp == rhs.tp &&
                op == rhs.op &&
                originalOp == rhs.originalOp &&
@@ -81,7 +83,8 @@ struct instruction {
                rs2 == rhs.rs2 &&
                imm == rhs.imm &&
                pc == rhs.pc &&
-               iR == rhs.iR;
+               iR == rhs.iR &&
+               clock == rhs.clock;
     }
 };
 

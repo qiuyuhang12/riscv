@@ -4,15 +4,15 @@
 #include "decode.hpp"
 
 void instruction::print() {
-    std::cout<<"inst    ";
+    std::cout << "inst    ";
     switch (tp) {
         case U_TYPE:
             switch (op) {
                 case lui:
-                    std::cout << "lui x" << rd << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "lui x" << rd << " " << std::hex << imm << std::endl;
                     break;
                 case auipc:
-                    std::cout << "auipc x" << rd << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "auipc x" << rd << " " << std::hex << imm << std::endl;
                     break;
                 default:
                     std::cout << "undefined" << std::endl;
@@ -22,7 +22,7 @@ void instruction::print() {
         case J_TYPE:
             switch (op) {
                 case jal:
-                    std::cout << "jal x" << rd << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "jal x" << rd << " " << std::hex << imm << std::endl;
                     break;
                 default:
                     std::cout << "undefined" << std::endl;
@@ -32,49 +32,49 @@ void instruction::print() {
         case I_TYPE:
             switch (op) {
                 case lb:
-                    std::cout << "lb x" << rd << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "lb x" << rd << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 case lh:
-                    std::cout << "lh x" << rd << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "lh x" << rd << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 case lw:
-                    std::cout << "lw x" << rd << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "lw x" << rd << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 case lbu:
-                    std::cout << "lbu x" << rd << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "lbu x" << rd << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 case lhu:
-                    std::cout << "lhu x" << rd << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "lhu x" << rd << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 case addi:
-                    std::cout << "addi x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "addi x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case slti:
-                    std::cout << "slti x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "slti x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case sltiu:
-                    std::cout << "sltiu x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "sltiu x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case xori:
-                    std::cout << "xori x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "xori x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case ori:
-                    std::cout << "ori x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "ori x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case andi:
-                    std::cout << "andi x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "andi x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case slli:
-                    std::cout << "slli x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "slli x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case srli:
-                    std::cout << "srli x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "srli x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case srai:
-                    std::cout << "srai x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "srai x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 case jalr:
-                    std::cout << "jalr x" << rd << " x" << rs1 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "jalr x" << rd << " x" << rs1 << " " << std::hex << imm << std::endl;
                     break;
                 default:
                     std::cout << "undefined" << std::endl;
@@ -84,22 +84,22 @@ void instruction::print() {
         case B_TYPE:
             switch (op) {
                 case beq:
-                    std::cout << "beq x" << rs1 << " x" << rs2 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "beq x" << rs1 << " x" << rs2 << " " << std::hex << imm << std::endl;
                     break;
                 case bne:
-                    std::cout << "bne x" << rs1 << " x" << rs2 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "bne x" << rs1 << " x" << rs2 << " " << std::hex << imm << std::endl;
                     break;
                 case blt:
-                    std::cout << "blt x" << rs1 << " x" << rs2 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "blt x" << rs1 << " x" << rs2 << " " << std::hex << imm << std::endl;
                     break;
                 case bge:
-                    std::cout << "bge x" << rs1 << " x" << rs2 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "bge x" << rs1 << " x" << rs2 << " " << std::hex << imm << std::endl;
                     break;
                 case bltu:
-                    std::cout << "bltu x" << rs1 << " x" << rs2 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "bltu x" << rs1 << " x" << rs2 << " " << std::hex << imm << std::endl;
                     break;
                 case bgeu:
-                    std::cout << "bgeu x" << rs1 << " x" << rs2 << " " <<std::hex<< imm  << std::endl;
+                    std::cout << "bgeu x" << rs1 << " x" << rs2 << " " << std::hex << imm << std::endl;
                     break;
                 default:
                     std::cout << "undefined" << std::endl;
@@ -109,13 +109,13 @@ void instruction::print() {
         case S_TYPE:
             switch (op) {
                 case sb:
-                    std::cout << "sb x" << rs2 << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "sb x" << rs2 << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 case sh:
-                    std::cout << "sh x" << rs2 << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "sh x" << rs2 << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 case sw:
-                    std::cout << "sw x" << rs2 << " " <<std::hex<< imm  << "(x" << rs1 << ")" << std::endl;
+                    std::cout << "sw x" << rs2 << " " << std::hex << imm << "(x" << rs1 << ")" << std::endl;
                     break;
                 default:
                     std::cout << "undefined" << std::endl;
@@ -167,8 +167,10 @@ void instruction::print() {
             break;
     }
 }
-instruction decode(int iR){
+
+instruction decode(int iR) {
     instruction ins;
+    ins.clock = clo;
     ins.iR = iR;
     if (iR == 0x0ff00513) {
         ins.tp = END;

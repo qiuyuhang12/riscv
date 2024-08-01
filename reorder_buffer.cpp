@@ -19,12 +19,14 @@ void Rob::check(int pc) {
 //        assert(0);
     }
     interpreter.work1step();
-//    for (int i = 0; i < CdbCapacity; ++i) {
-//        if (cdb->cdbNext[i].state != Cdb::LEISURE) {
-//            cerr << "cdb: " << i << " state: " << cdb->cdbNext[i].state << endl;
-//            flag = true;
-//        }
-//    }
+#ifdef single
+    for (int i = 0; i < CdbCapacity; ++i) {
+        if (cdb->cdbNext[i].state != Cdb::LEISURE) {
+            cerr << "cdb: " << i << " state: " << cdb->cdbNext[i].state << endl;
+            flag = true;
+        }
+    }
+#endif
     for (int i = 1; i < 32; ++i) {
 //        assert(interpreter.reg[i] == reg->regNext[i].value);
         if (interpreter.reg[i] != reg->regNext[i].value) {
@@ -36,7 +38,7 @@ void Rob::check(int pc) {
     }
     for (int i = 0; i < MemoryCapacity; ++i) {
         if (interpreter.memory[i] != memory->memory[i]) {
-            cerr << "mem: 0x" << hex << i << "  your:" << memory->memory[i] << "   truth:" << interpreter.memory[i]
+            cerr << "mem: 0x" << hex << i << "  your:" << memory->memory[i] << "   truth:" <<hex<< interpreter.memory[i]
                  << endl;
 //            cout <<"mem: 0x"<<hex<< i << "  your:" << memory->memory[i] << "   truth:" << interpreter.memory[i] << endl;
             flag = true;

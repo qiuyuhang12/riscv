@@ -28,6 +28,10 @@ void Lsb::receiveBroadcast() {
         if (lsb[i].regEntry != -1) {
             auto tmp = cdb->get(lsb[i].regEntry);
             if (tmp.first) {
+#ifdef debug
+                cout << "lsb receiveBroadcast pc : " << lsb[i].inst.pc << "  entry: " << lsb[i].entry
+                     << "   lsb reg(要存的值) : " << tmp.second << "    reg 依赖： " << lsb[i].regEntry << endl;
+#endif
                 lsbNext[i].reg = tmp.second;
                 lsbNext[i].regEntry = -1;
             }
@@ -35,6 +39,10 @@ void Lsb::receiveBroadcast() {
         if (lsb[i].memEntry != -1) {
             auto tmp = cdb->get(lsb[i].memEntry, true);
             if (tmp.first) {
+#ifdef debug
+                cout << "lsb receiveBroadcast pc : " << lsb[i].inst.pc << "  entry: " << lsb[i].entry
+                     << "   lsb mem(地址) : " << tmp.second << endl;
+#endif
                 lsbNext[i].mem = tmp.second;
                 lsbNext[i].memEntry = -1;
             }
@@ -44,8 +52,8 @@ void Lsb::receiveBroadcast() {
 
 void Lsb::execute() {
 #ifdef debug
-    cout << "lsb execute pc : " << lsb.front().inst.pc <<"  entry: "<<lsb.front().entry<< endl;
-    cout<<"lsb mem : "<<lsb.front().mem<<endl;
+    cout << "lsb execute pc : " << lsb.front().inst.pc << "  entry: " << lsb.front().entry << endl;
+    cout << "lsb mem : " << lsb.front().mem << endl;
 //    lsb.front().print();
 #endif
     assert(!lsb.isEmpty());
@@ -88,7 +96,7 @@ void Lsb::execute() {
 //        cout<<"load: "<<loadValue<<endl;
         lsbNext.front().value = loadValue;
         cdb->write(loadValue, lsb.front().entry);
-        if (reg->regNext[lsb.front().dest].entry==lsb.front().entry){
+        if (reg->regNext[lsb.front().dest].entry == lsb.front().entry) {
             reg->regNext[lsb.front().dest].busy = false;
             reg->regNext[lsb.front().dest].entry = -1;
         }
@@ -147,7 +155,13 @@ void Lsb::issue(instruction inst, int entry) {
             break;
         case S_TYPE:
             if (reg->regNext[inst.rs2].busy) {
-                tmp.regEntry = reg->regNext[inst.rs2].entry;
+                auto tmp0 = cdb->get(reg->regNext[inst.rs2].entry);
+                if (tmp0.first) {
+                    tmp.reg = tmp0.second;
+                } else {
+                    tmp.regEntry = reg->regNext[inst.rs2].entry;
+                }
+//                tmp.regEntry = reg->regNext[inst.rs2].entry;
             } else {
                 tmp.reg = reg->regNext[inst.rs2].value;
             }
@@ -162,13 +176,14 @@ void Lsb::issue(instruction inst, int entry) {
 
 
 void Lsb::commit(int entry) {
-    if (entry!=lsb.front().entry){
-        cerr<<hex<<"entry: "<<entry<<"  lsb_entry: "<<lsb.front().entry<<"  lsb_pc: "<<lsb.front().inst.pc<<endl;
+    if (entry != lsb.front().entry) {
+        cerr << hex << "entry: " << entry << "  lsb_entry: " << lsb.front().entry << "  lsb_pc: " << lsb.front().inst.pc
+             << endl;
         assert(0);
     }
     if (!memory->working) {
 #ifdef debug
-        cout << "lsb commit pc : " << lsb.front().inst.pc<< " entry: " <<lsb.front().entry<< endl;
+        cout << "lsb commit pc : " << lsb.front().inst.pc << " entry: " << lsb.front().entry << endl;
 //        lsb.front().print();
 #endif
         assert(lsb.front().memEntry == -1 && lsb.front().regEntry == -1);
