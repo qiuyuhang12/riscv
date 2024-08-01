@@ -90,8 +90,8 @@ void Rs::issue(int entry, instruction inst, int pc) {
     cout << "Rs issue pc:" << std::hex << pc << "  entry: " << entry << endl;
 #endif
 #ifdef detail
-//    cout << "RS issue pc: " << reg->pcReg <<"  entry: "<<entry<< endl;
-    inst.print();
+    //    cout << "RS issue pc: " << reg->pcReg <<"  entry: "<<entry<< endl;
+        inst.print();
 #endif
     assert(inst.op != jal);
     for (int i = 0; i < capacity; i++) {
@@ -188,8 +188,11 @@ void Rs::step() {
     for (int i = 0; i < capacity; i++) {
         if (rs[i].busy) {
             if (rs[i].entry1 == -1 && rs[i].entry2 == -1) {
-                if (tobeExecuted==-1||rs[i].inst.clock<rs[tobeExecuted].inst.clock){
-                    tobeExecuted=i;
+                if (tobeExecuted == -1 || rs[i].inst.clock < rs[tobeExecuted].inst.clock) {
+                    if (rs[i].isB && alu->bWorking) {
+                        continue;
+                    }
+                    tobeExecuted = i;
                 }
 //                execute(i);
 ////                    rob->commit(rs[i].dest, rs[i].a);
@@ -199,7 +202,7 @@ void Rs::step() {
             }
         }
     }
-    if (tobeExecuted!=-1){
+    if (tobeExecuted != -1) {
         execute(tobeExecuted);
         rsNext[tobeExecuted].init();
     }

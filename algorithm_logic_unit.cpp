@@ -48,6 +48,7 @@ void Alu::bExe() {
 }
 
 void Alu::bWrite() {
+    bWorkingNext = false;
     cdb->writeBr(outBuffer.pc, outBuffer.rsl, outBuffer.entry);
     bufferNext.init();
     outBufferNext.init();
@@ -63,9 +64,9 @@ void Alu::init(Cdb *cdb) {
 
 void Alu::step() {
     if (buffer.busy) {
-        if (!buffer.done) {
+        if (!outBuffer.done) {
             bExe();
-            bufferNext.done = true;
+//            bufferNext.done = true;
             outBufferNext.done = true;
         } else {
             bWrite();
@@ -74,6 +75,7 @@ void Alu::step() {
 }
 
 void Alu::inBuffer(int rs1, int rs2, int imm, opcode op, int entry, int pc) {
+    bWorkingNext = true;
     bufferNext.init();
     bufferNext.busy = true;
     bufferNext.rs1 = rs1;

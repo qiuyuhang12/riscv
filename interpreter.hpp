@@ -31,7 +31,7 @@ public:
     Interpreter() {
         pre();
     }
-    const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/qsort.data";
+    const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/bulgarian.data";
 
     int reg[32] = {0};
     int memory[1 << 20] = {0};

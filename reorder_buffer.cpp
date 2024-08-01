@@ -8,7 +8,7 @@
 extern Interpreter interpreter;
 
 void Rob::check(int pc) {
-
+//    return;
     static int checkCount = 0;
     checkCount++;
     bool flag = false;

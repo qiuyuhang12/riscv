@@ -84,7 +84,7 @@ void Simulator::work() {
 //            rob.queue[5].print();
 //        }
 //#endif
-//        if (clo > 0x318) {
+//        if (clo > 0x7880) {
 //            break;
 //        }
 //        cout<<clock<<endl;

@@ -33,7 +33,7 @@ const int PredictorCapacity = 1;
 const int RsCapacity = 1;
 const int capacity = 1;//queue
 #endif
-const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/qsort.data";
+const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/bulgarian.data";
 
 template<typename T>
 class CircularQueue {
