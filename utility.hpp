@@ -10,7 +10,7 @@
 #ifndef debug
 //#define fileread
 #endif
-#define single
+//#define single
 //#define showShoot
 #include <cassert>
 #include <iostream>
@@ -24,11 +24,11 @@ extern int clo;
 int sext(int imm, int len);
 
 #ifndef single
-const int CdbCapacity = 1 << 5;
+const int CdbCapacity = 1 << 3;
 const int MemoryCapacity = 1 << 18;
 const int PredictorCapacity = 1 << 5;
 const int RsCapacity = 1 << 4;
-const int capacity = 1 << 4;//queue
+const int capacity = 1 << 2;//queue
 #endif
 #ifdef single
 const int CdbCapacity = 1 << 2;

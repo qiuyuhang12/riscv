@@ -108,7 +108,7 @@ void Cdb::write(int value, int entry, bool memAddr) {
 std::pair<int, int> Cdb::get(int entry, bool memAddr, bool isJ) {
     for (int i = 0; i < capacity; i++) {
         if (cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
-            cdbNext[i].state = USED;
+//            cdbNext[i].state = USED;
             auto rsl = std::make_pair(true, cdb[i].value);
             if (memAddr && !isJ) {
                 erase(entry, true);
@@ -122,7 +122,7 @@ std::pair<int, int> Cdb::get(int entry, bool memAddr, bool isJ) {
 std::pair<int, std::pair<int, int>> Cdb::getBr(int entry) {//<找到，《pc，rsl》>
     for (int i = 0; i < capacity; i++) {
         if (br[i].entry == entry) {
-            brNext[i].state = USED;
+//            brNext[i].state = USED;
             return std::make_pair(true, std::make_pair(br[i].pc, br[i].rsl));
         }
     }
@@ -145,7 +145,7 @@ void Cdb::writeJal(int value, int entry, int valuePC) {
 
 std::pair<int, int> Cdb::getJal(int entry) {
     if (ju.entry == entry) {
-        juNext.state = USED;
+//        juNext.state = USED;
         return std::make_pair(true, ju.value);
     }
     return std::make_pair(false, 0);

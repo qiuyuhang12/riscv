@@ -29,6 +29,11 @@ void Simulator::addPC(int reg_rs1, int imm) {
 }
 
 void Simulator::flush() {
+//    for (int i = 0; i < CdbCapacity; ++i) {
+//        if (cdb.cdbNext[i].state == Cdb::USED && cdb.cdbNext[i].entry == -1) {
+//            assert(0);
+//        }
+//    }
 #ifdef detail
     std::cout << std::hex << "pc: " << pc << "    pcNext: " << pcNext << std::endl;
 #endif

@@ -14,7 +14,7 @@ public:
     enum State {
         LEISURE,
         ACTIVE,
-        USED
+//        USED
     };
 
     struct unit {
