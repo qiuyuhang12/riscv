@@ -29,7 +29,7 @@ public:
 
     ~Predictor() {
 #ifdef showShoot
-        std::cout<<"shoot: "<<shoot<<"  got: "<<got<<"  rate: "<<(double)got/shoot<<std::endl;
+        std::cout<<std::endl<<"shoot: "<<shoot<<"  got: "<<got<<"  rate: "<<(double)got/shoot<<std::endl;
 #endif
     }
 

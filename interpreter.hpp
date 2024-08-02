@@ -4,25 +4,18 @@
 //#include "utility.hpp"
 #ifndef INTERPRETER_HPP
 #define INTERPRETER_HPP
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <cassert>
+
 //#define debug
 extern const std::string filePath;
+
 extern int sext(int imm, int len);
-//const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/sample/sample.data";
-//int sext(int imm, int len) {
-//    if (len == 32) {
-//        return imm;
-//    }
-//    if ((imm >> (len - 1)) & 1) {
-//        long long tmp = (long long) imm | (long long) (0xFFFFFFFF << len);
-//        return tmp;
-//    }
-//    return imm;
-//}
+
 using namespace std;
 
 //int memory[1 << 13] = {0};
@@ -31,7 +24,8 @@ public:
     Interpreter() {
         pre();
     }
-    const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/pi.data";
+
+    const std::string filePath = "/run/media/qiuyuhang/data/ppca/riscv/testcases/bulgarian.data";
 
     int reg[32] = {0};
     int memory[1 << 20] = {0};
@@ -569,11 +563,11 @@ public:
 //        while (pc < 1 << 20) {
 //    while (pc<1<<20&&clock<1000){
 #ifdef debug
-//        ++clock;
-        assert(pc % 4 == 0);
-        assert(get8() == 0x0ff00513);
-//        if (clock%1000==0)
-//            cout << clock << "  " << hex << pc << dec << endl;
+        //        ++clock;
+                assert(pc % 4 == 0);
+                assert(get8() == 0x0ff00513);
+        //        if (clock%1000==0)
+        //            cout << clock << "  " << hex << pc << dec << endl;
 #endif
         step();
         instruction ins = decode();
