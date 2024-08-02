@@ -29,7 +29,6 @@ void Simulator::addPC(int reg_rs1, int imm) {
 }
 
 void Simulator::flush() {
-//#ifdef debug
 #ifdef detail
     std::cout << std::hex << "pc: " << pc << "    pcNext: " << pcNext << std::endl;
 #endif
@@ -73,24 +72,13 @@ Simulator::Simulator() : reg(pc, pcNext) {
 void Simulator::work() {
     int cccclock = 0;
     while (true) {
-//#ifdef debug
-//        if (cccclock%1000==0)
+//        if (clo%0x1000000==0)
+//        cout<<clo<<endl;
 #ifdef debug
         cout << "-----------------------------------------" << cccclock
              << "-----------------------------------------" <<boolalpha<<cdb.jalrPanic<< endl;
 #endif
-//        if (rob.queue[5].state!=Rob::UNKNOWN){
-//            cout<<"rob[5]:"<<rob.queue[5].state<<endl;
-//            rob.queue[5].print();
-//        }
-//#endif
-//        if (clo > 0x7880) {
-//            break;
-//        }
-//        cout<<clock<<endl;
-
         if (cccclock & 1) {
-//            cout<<"cdb[0]:"<<cdb.cdb[0].state<<"  "<<cdb.cdbNext[0].state<<endl;
             flush();
 #ifdef debug
             if (rob.queue.isEmpty()){
@@ -100,7 +88,6 @@ void Simulator::work() {
             }
 #endif
         } else {
-//            if (clock%1000==0)
 
 #ifdef debug
             cout << boolalpha << rob.isFull() << "    " << rs.isFull() << "    " << lsb.isFull() << "    "
@@ -113,10 +100,8 @@ void Simulator::work() {
                 auto inst = decode(iR);
                 inst.pc = pc;
                 rob.issue(iR);
-//                reg.print(0x15,0x16);
                 if (inst.tp != type::U_TYPE && inst.tp != type::J_TYPE && inst.op != opcode::end) {
                     rs.issue(rob.getNextRearIndex(), inst, pc);
-//                    reg.print(0x15,0x16);
                 }
                 // load & store
                 if ((inst.tp == type::S_TYPE || inst.originalOp == 3) && inst.op != opcode::end) {
@@ -127,19 +112,14 @@ void Simulator::work() {
                 } else {
                     cdb.pcFrozen = false;
                 }
-//                reg.print(0xf, 0x10);
             }
             try {
                 rob.step();
             } catch (int a) {
-                cout<<a;
+                cout << a;
                 return;
             }
-//            reg.print(0xf, 0x10);
-
             rs.step();
-//            reg.print(0xf, 0x10);
-
             lsb.step();
             memory.step();
             alu.step();

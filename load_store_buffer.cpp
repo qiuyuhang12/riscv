@@ -161,7 +161,6 @@ void Lsb::issue(instruction inst, int entry) {
                 } else {
                     tmp.regEntry = reg->regNext[inst.rs2].entry;
                 }
-//                tmp.regEntry = reg->regNext[inst.rs2].entry;
             } else {
                 tmp.reg = reg->regNext[inst.rs2].value;
             }
@@ -199,15 +198,8 @@ void Lsb::step() {
     receiveBroadcast();
     if (lsb.front().time > 0) {//等待memory完成
         lsbNext.front().time++;
-//        if (lsb.front().time == 3) {
         if (!memory->working) {
             execute();
-//            if (lsb.front().inst.tp == I_TYPE) {
-//                cdb->write(lsb.front().value, lsb.front().entry);
-//                reg->regNext[lsb.front().dest].busy = false;
-//                reg->regNext[lsb.front().dest].entry = -1;
-//                reg->regNext[lsb.front().dest].value = lsb.front().value;
-//            }
             lsbNext.dequeue();
         }
     }

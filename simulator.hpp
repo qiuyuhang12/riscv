@@ -17,6 +17,7 @@
 #include "common_data_bus.hpp"
 #include "algorithm_logic_unit.hpp"
 #include "interpreter.hpp"
+
 //extern int clo;
 class Simulator {
 public:
@@ -28,7 +29,7 @@ public:
 
     void addPC(int imm);
 
-    void addPC(int reg_rs1, int imm) ;
+    void addPC(int reg_rs1, int imm);
 
 
     Reg reg;
@@ -44,6 +45,7 @@ public:
 
 public:
     Simulator();
+
     void work();
 };
 

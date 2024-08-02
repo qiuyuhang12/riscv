@@ -20,7 +20,6 @@ class Reg;
 class Lsb;
 
 class Cdb;
-//class Alu;
 
 class Rs {
 public:
@@ -75,20 +74,6 @@ public:
                    entry2 == rhs.entry2 && dest == rhs.dest && a == rhs.a && pc == rhs.pc && isB == rhs.isB &&
                    inst == rhs.inst;
         }
-//        unit &operator=(const unit &rhs) {
-//            busy = rhs.busy;
-//            op = rhs.op;
-//            rs1 = rhs.rs1;
-//            rs2 = rhs.rs2;
-//            imm = rhs.imm;
-//            entry1 = rhs.entry1;
-//            entry2 = rhs.entry2;
-//            dest = rhs.dest;
-//            a = rhs.a;
-//            pc = rhs.pc;
-//            inst = rhs.inst;
-//            return *this;
-//        }
     };
 
     unit rs[capacity];
@@ -114,7 +99,7 @@ public:
 
     void step();
 
-    void clear(){
+    void clear() {
         for (int i = 0; i < capacity; ++i) {
             rsNext[i].init();
             rs[i].init();

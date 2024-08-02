@@ -15,7 +15,7 @@ public:
         bool busy = false;
         int entry = -1;
 
-        void init() ;
+        void init();
     };
 
     unit reg[32];
@@ -23,18 +23,19 @@ public:
     int &pcReg;
     int &nextPCReg;
 
-    void flush() ;
+    void flush();
 
-//    int reg[32] = {0};
-//    bool isBusy[32] = {false};
-//    int entry[32] = {0};
-    Reg(int &_pcReg, int &_nextPCReg) ;
-    void print(int m=0,int n=32) {
+    Reg(int &_pcReg, int &_nextPCReg);
+
+    void print(int m = 0, int n = 32) {
         for (int i = m; i < n; i++) {
-            std::cout << "reg[" << i << "]:     \t  " << reg[i].value << "\t  busy: " << reg[i].busy << "\t  entry: " << reg[i].entry << std::endl;
-            std::cout << "regNext[" << i << "]: \t  " << regNext[i].value << "\t  busy: " << regNext[i].busy << "\t  entry: " << regNext[i].entry << std::endl;
+            std::cout << "reg[" << i << "]:     \t  " << reg[i].value << "\t  busy: " << reg[i].busy << "\t  entry: "
+                      << reg[i].entry << std::endl;
+            std::cout << "regNext[" << i << "]: \t  " << regNext[i].value << "\t  busy: " << regNext[i].busy
+                      << "\t  entry: " << regNext[i].entry << std::endl;
         }
     }
+
     void clear() {
         for (int i = 0; i < 32; i++) {
             regNext[i].busy = false;

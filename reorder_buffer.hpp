@@ -32,6 +32,7 @@ public:
         COMMIT,
         TODELETECDB,
     };
+
     struct Unit {
         int entry;
         bool busy = false;
@@ -40,12 +41,16 @@ public:
         int dest = -1;
         int value = 0;
         int pc = 0;//debug
-        bool branch= false;
+        bool branch = false;
+
         void print();
-        bool operator==(const Unit &rhs) const{
-            return entry == rhs.entry&&busy == rhs.busy&&inst == rhs.inst&&state == rhs.state&&dest == rhs.dest&&value == rhs.value&&pc == rhs.pc;
+
+        bool operator==(const Unit &rhs) const {
+            return entry == rhs.entry && busy == rhs.busy && inst == rhs.inst && state == rhs.state &&
+                   dest == rhs.dest && value == rhs.value && pc == rhs.pc;
         }
     };
+
     CircularQueue<Unit> queue;
     CircularQueue<Unit> queueNext;
 
@@ -60,7 +65,7 @@ public:
 public:
     Rob();
 
-    Rob(Reg *_reg, Lsb *_lsb, Cdb *_cdb, Memory *_memory, Rs *_rs, Predictor *_predictor) ;
+    Rob(Reg *_reg, Lsb *_lsb, Cdb *_cdb, Memory *_memory, Rs *_rs, Predictor *_predictor);
 
     void init(Reg *_reg, Lsb *_lsb, Cdb *_cdb, Memory *_memory, Rs *_rs, Predictor *_predictor);
 
@@ -74,13 +79,12 @@ public:
 
     bool isFull();
 
-    void clear(){
+    void clear() {
 #ifdef debug
         std::cout<<"rob clear--------------------------------------------------------------------------------------"<<std::endl;
 #endif
         queueNext.clear();
         queue.clear();
-//    queueNext.cut(entry);
         lsb->clear();
         rs->clear();
         reg->clear();

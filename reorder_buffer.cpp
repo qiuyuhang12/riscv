@@ -28,11 +28,9 @@ void Rob::check(int pc) {
     }
 #endif
     for (int i = 1; i < 32; ++i) {
-//        assert(interpreter.reg[i] == reg->regNext[i].value);
         if (interpreter.reg[i] != reg->regNext[i].value) {
             cerr << "reg: 0x" << hex << i << "  your:" << reg->regNext[i].value << "   truth:" << interpreter.reg[i]
                  << endl;
-//            cout <<"reg: 0x"<<hex<< i << "  your:" << reg->regNext[i].value << "   truth:" << interpreter.reg[i] << endl;
             flag = true;
         }
     }
@@ -41,13 +39,10 @@ void Rob::check(int pc) {
             cerr << "mem: 0x" << hex << i << "  your:" << memory->memory[i] << "   truth:" << hex
                  << interpreter.memory[i]
                  << endl;
-//            cout <<"mem: 0x"<<hex<< i << "  your:" << memory->memory[i] << "   truth:" << interpreter.memory[i] << endl;
             flag = true;
         }
-//        assert(interpreter.memory[i] == memory->memory[i]);
     }
     if (flag) {
-//        exit(0);
         assert(0);
     }
 }
@@ -65,9 +60,7 @@ void Rob::commit() {
 #endif
     if (tmp.inst.op == opcode::end) {
         int tmp = reg->reg[10].value & 0xff;
-//        cout << (reg->reg[10].value & 0xff);
         throw tmp;
-//        exit(0);
     }
     assert(tmp.state == WRITE);
     if (tmp.inst.originalOp == 3 || tmp.inst.tp == type::S_TYPE) {//LOAD,STORE,不进入switch
@@ -135,7 +128,6 @@ void Rob::wrongPredicted(int entry, int pc) {
 
 void Rob::receiveBroadcast() {
     //todo::front>rear!!!时候
-//    for (int i = queue.frontIndex; i <= queue.rearIndex; i++) {
     for (int i = 0; i < capacity; i++) {
         if (!queue.isInQueue(i)) {
             continue;
@@ -150,7 +142,6 @@ void Rob::receiveBroadcast() {
                 cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << "  entry: " << i << endl;
 #endif
                 if (queue[i].inst.op == opcode::jalr) {
-//                    cdb->stop= false;
                     reg->nextPCReg = tmp.second;
                     cdb->jalrPanic = false;
                     queueNext[i].state = WRITE;
@@ -168,7 +159,6 @@ void Rob::receiveBroadcast() {
 #ifdef debug
                 cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << "  entry: " << i << endl;
 #endif
-//                cout << "ppppppppppppppppppppppc: " << std::hex << reg->nextPCReg << endl;
                 if (queue[i].value != tmp.second.second) {
                     queueNext[i].value = tmp.second.first;//(从bool变成pc值)
                     queueNext[i].branch = false;
@@ -181,17 +171,11 @@ void Rob::receiveBroadcast() {
                 queueNext[i].state = WRITE;
                 continue;
             }
-//                if (queue[i].inst.op==opcode::jal||queue[i].inst.op==opcode::jalr){
-//                    queueNext[i].pc=pc;
-//                    queueNext[i].state=WRITE;
-//                    return;
-//                }
             auto tmp = cdb->get(queue[i].entry);
             if (tmp.first) {
 #ifdef debug
                 cout << "rob receiveBroadcast pc:" << std::hex << queue[i].pc << "  entry: " << i << endl;
 #endif
-
                 queueNext[i].value = tmp.second;
                 queueNext[i].state = WRITE;
             }
@@ -252,10 +236,7 @@ void Rob::step() {
     }
     if (tmp.state == WRITE || tmp.inst.op == opcode::end) {
         commit();
-//    } else if (tmp.state == COMMIT) {
     } else if (tmp.inst.tp == type::S_TYPE || tmp.inst.originalOp == 3) {
-//        assert(tmp.inst.tp==type::S_TYPE||tmp.inst.originalOp==3);
-//        if (!memory->working) {
         if (!memory->working && tmp.state == COMMIT) {
             queueNext.front().state = TODELETECDB;
         }

@@ -12,12 +12,14 @@ int sext(int imm, int len) {
     }
     return imm;
 }
+
 extern int clo;
+
 template<typename T>
 CircularQueue<T>::CircularQueue() : frontIndex(0), rearIndex(-1), currentSize(0) {}
 
 template<typename T>
-bool CircularQueue<T>::enqueue(const T &value)  {
+bool CircularQueue<T>::enqueue(const T &value) {
     if (isFull()) {
         return false;
     }
@@ -38,11 +40,11 @@ int CircularQueue<T>::size() const {
 }
 
 template<typename T>
-bool CircularQueue<T>::dequeue()  {
+bool CircularQueue<T>::dequeue() {
     if (isEmpty()) {
         return false;
     }
-    front()=T();
+    front() = T();
     frontIndex = (frontIndex + 1) % capacity;
     currentSize--;
     return true;
@@ -65,7 +67,7 @@ T &CircularQueue<T>::rear() {
 }
 
 template<typename T>
-bool CircularQueue<T>::isEmpty() const{
+bool CircularQueue<T>::isEmpty() const {
     return currentSize == 0;
 }
 
@@ -99,6 +101,9 @@ void CircularQueue<T>::cut(int index) {
 }
 
 // Explicit template instantiation
-template class CircularQueue<Lsb::unit>;
-template class CircularQueue<Rob::Unit>;
+template
+class CircularQueue<Lsb::unit>;
+
+template
+class CircularQueue<Rob::Unit>;
 

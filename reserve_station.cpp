@@ -102,11 +102,6 @@ void Rs::issue(int entry, instruction inst, int pc) {
             rsNext[i].op = inst.op;
             rsNext[i].dest = entry;
             rsNext[i].pc = pc;
-//                if (inst.op==opcode::jal){
-//                    rsNext[i].rs2 = reg->pcReg;
-//                    rsNext[i].imm=inst.imm;
-//                    return;
-//                }
             if (reg->reg[inst.rs1].busy) {
                 auto tmp = cdb->get(reg->reg[inst.rs1].entry);
                 if (tmp.first) {
@@ -194,11 +189,6 @@ void Rs::step() {
                     }
                     tobeExecuted = i;
                 }
-//                execute(i);
-////                    rob->commit(rs[i].dest, rs[i].a);
-////                    cdb->commit(rs[i].a, rs[i].dest);
-//                rsNext[i].init();
-//                break;
             }
         }
     }

@@ -181,9 +181,6 @@ instruction decode(int iR) {
         ins.imm = -1;
         ins.pc = -1;
         return ins;
-//        std::cout << (reg[10] & 0xff);
-//        exit(0);
-//        exit(reg[10]);
     }
     ins.rd = (iR >> 7) & 31;
     ins.rs1 = (iR >> 15) & 31;

@@ -96,7 +96,7 @@ public:
 
     bool ready();
 
-    void clear(){
+    void clear() {
         lsbNext.clear();
         lsb.clear();
     }

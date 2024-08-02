@@ -6,22 +6,22 @@
 void Cdb::erase(int entry, bool memAddr) {
     for (int i = 0; i < capacity; i++) {
         if (cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
-//            assert(cdb[i].state == USED);
             cdbNext[i].init();
             return;
         }
     }
     assert(0); // entry not found
 }
+
 void Cdb::eraseBr(int entry) {
     for (int i = 0; i < capacity; i++) {
         if (br[i].entry == entry) {
-//            assert(br[i].state == USED);
             brNext[i].init();
             return;
         }
     }
 }
+
 void Cdb::flush() {
 #ifdef detail
     std::cout << "cdb flush: nonebr " << std::endl;
@@ -74,7 +74,7 @@ void Cdb::writeBr(int pc, bool rsl, int entry) {
 void Cdb::write(int value, int entry, bool memAddr) {
 
     for (int i = 0; i < capacity; i++) {
-        if (cdb[i].state==LEISURE&&cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
+        if (cdb[i].state == LEISURE && cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
 #ifdef detail
             for (int j = 0; j < capacity; ++j) {
                 cdb[j].print();
@@ -83,7 +83,7 @@ void Cdb::write(int value, int entry, bool memAddr) {
             assert(0);
         }
         //really?
-        if (cdb[i].state!=LEISURE&&cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
+        if (cdb[i].state != LEISURE && cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
 #ifdef detail
             for (int j = 0; j < capacity; ++j) {
                 cdb[j].print();
@@ -105,12 +105,12 @@ void Cdb::write(int value, int entry, bool memAddr) {
     assert(0); // cdb is full
 }
 
-std::pair<int, int> Cdb::get(int entry, bool memAddr,bool isJ) {
+std::pair<int, int> Cdb::get(int entry, bool memAddr, bool isJ) {
     for (int i = 0; i < capacity; i++) {
         if (cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
             cdbNext[i].state = USED;
             auto rsl = std::make_pair(true, cdb[i].value);
-            if (memAddr&&!isJ){
+            if (memAddr && !isJ) {
                 erase(entry, true);
             }
             return rsl;
