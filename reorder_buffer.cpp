@@ -38,7 +38,8 @@ void Rob::check(int pc) {
     }
     for (int i = 0; i < MemoryCapacity; ++i) {
         if (interpreter.memory[i] != memory->memory[i]) {
-            cerr << "mem: 0x" << hex << i << "  your:" << memory->memory[i] << "   truth:" <<hex<< interpreter.memory[i]
+            cerr << "mem: 0x" << hex << i << "  your:" << memory->memory[i] << "   truth:" << hex
+                 << interpreter.memory[i]
                  << endl;
 //            cout <<"mem: 0x"<<hex<< i << "  your:" << memory->memory[i] << "   truth:" << interpreter.memory[i] << endl;
             flag = true;
@@ -63,8 +64,10 @@ void Rob::commit() {
     cout << "Rob commit pc:" << std::hex << tmp.pc << "  entry: " << tmp.entry << endl;
 #endif
     if (tmp.inst.op == opcode::end) {
-        cout << (reg->reg[10].value & 0xff);
-        exit(0);
+        int tmp = reg->reg[10].value & 0xff;
+//        cout << (reg->reg[10].value & 0xff);
+        throw tmp;
+//        exit(0);
     }
     assert(tmp.state == WRITE);
     if (tmp.inst.originalOp == 3 || tmp.inst.tp == type::S_TYPE) {//LOAD,STORE,不进入switch
@@ -167,7 +170,7 @@ void Rob::receiveBroadcast() {
 #endif
 //                cout << "ppppppppppppppppppppppc: " << std::hex << reg->nextPCReg << endl;
                 if (queue[i].value != tmp.second.second) {
-                    queueNext[i].value = tmp.second.first;//从bool变成pc值
+                    queueNext[i].value = tmp.second.first;//(从bool变成pc值)
                     queueNext[i].branch = false;
 //                    wrongPredicted(i, tmp.second.first);
                     predictor->update(queue[i].inst.pc, false);
@@ -261,6 +264,7 @@ void Rob::step() {
 
 void Rob::issue(int iR) {
     instruction inst = decode(iR);
+    inst.pc = reg->pcReg;
     Unit unit;
     if (inst.op == opcode::end) {
         unit.inst = inst;
@@ -295,10 +299,10 @@ void Rob::issue(int iR) {
         cdb->pcFrozen = true;
         if (predictor->getPredict(reg->pcReg) == jump) {
             reg->nextPCReg += sext(inst.imm, 13);
-            unit.value = reg->nextPCReg;
+            unit.value = true;
         } else {
             reg->nextPCReg += 4;
-            unit.value = reg->nextPCReg;
+            unit.value = false;
         }
     }
     if (inst.op == opcode::lui) {

@@ -6,6 +6,9 @@ Interpreter interpreter;
 #include "simulator.hpp"
 #include <cassert>
 int main() {
+#ifdef fileread
+    freopen(filePath.c_str(),"r",stdin);
+#endif
 //    while (1){
 //        interpreter.work1step();
 //    }

@@ -7,7 +7,11 @@
 //#define debug
 //#define detail
 //#define regshow
-//#define single
+#ifndef debug
+//#define fileread
+#endif
+#define single
+//#define showShoot
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -29,7 +33,7 @@ const int capacity = 1 << 4;//queue
 #ifdef single
 const int CdbCapacity = 1 << 2;
 const int MemoryCapacity = 1 << 19;
-const int PredictorCapacity = 1;
+const int PredictorCapacity = 1 << 5;
 const int RsCapacity = 1;
 const int capacity = 1;//queue
 #endif

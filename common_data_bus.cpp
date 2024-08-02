@@ -82,6 +82,15 @@ void Cdb::write(int value, int entry, bool memAddr) {
 #endif
             assert(0);
         }
+        //really?
+        if (cdb[i].state!=LEISURE&&cdb[i].entry == entry && cdb[i].memAddr == memAddr) {
+#ifdef detail
+            for (int j = 0; j < capacity; ++j) {
+                cdb[j].print();
+            }
+#endif
+            assert(0);
+        }
     }
     for (int i = 0; i < capacity; i++) {
         if (cdb[i].state == LEISURE) {

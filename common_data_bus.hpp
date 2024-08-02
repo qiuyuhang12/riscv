@@ -17,6 +17,7 @@ public:
         USED
     };
     struct unit {
+        bool take= false;//立即修改
         State state = LEISURE;
         int value = -1;
         int entry = -1;
@@ -29,6 +30,7 @@ public:
 //            return *this;
 //        }
         void init() {
+            take = false;
             state = LEISURE;
             value = -1;
             entry = -1;
@@ -40,6 +42,7 @@ public:
 
     };
     struct jaUnit {
+        bool take= false;//立即修改
         State state = LEISURE;
         int valuePC = 0;
         int value = 0;
@@ -52,6 +55,7 @@ public:
             return *this;
         }
         void init() {
+            take = false;
             state = LEISURE;
             value = 0;
             valuePC = 0;
@@ -59,11 +63,13 @@ public:
         }
     }ju, juNext;
     struct brUnit {
+        bool take= false;//立即修改
         State state = LEISURE;
         int pc = -1;
         bool rsl = false;
         int entry = -1;
         void init() {
+            take = false;
             state = LEISURE;
             pc = -1;
             rsl = false;

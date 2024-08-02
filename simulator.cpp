@@ -43,7 +43,7 @@ void Simulator::flush() {
     iR = 0;
     memory.flush();
 
-    if (cdb.clearUp== true){
+    if (cdb.clearUp == true) {
         rob.clear();
         return;
     }
@@ -129,7 +129,12 @@ void Simulator::work() {
                 }
 //                reg.print(0xf, 0x10);
             }
-            rob.step();
+            try {
+                rob.step();
+            } catch (int a) {
+                cout<<a;
+                return;
+            }
 //            reg.print(0xf, 0x10);
 
             rs.step();
